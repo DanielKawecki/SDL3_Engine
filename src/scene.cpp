@@ -21,7 +21,7 @@ namespace scene {
 			data.y = obj.y;
 			data.w = obj.w;
 			data.h = obj.h;
-			data.color = color_type(255, 255, 255, 255);
+			data.color = SDL_Color(255, 255, 255, 255);
 			
 			renderer::submit_render_data(data);
 		}

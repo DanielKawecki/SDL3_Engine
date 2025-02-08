@@ -48,7 +48,7 @@ void player::upload_render_data() const {
 	data.y = _y;
 	data.w = 50.f;
 	data.h = 50.f;
-	data.color = color_type(0, 255, 0, 255);
+	data.color = SDL_Color(0, 255, 0, 255);
 	data.texture = nullptr;
 
 	renderer::submit_render_data(data);

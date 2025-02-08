@@ -3,6 +3,10 @@
 
 namespace mth {
 
+    struct ivec2 {
+        int x, y;
+    };
+
     struct vec2 {
         float x = 0, y = 0;
 

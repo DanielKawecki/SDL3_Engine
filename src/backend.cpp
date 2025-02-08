@@ -2,6 +2,8 @@
 #include "renderer.h"
 #include "resource_manager.h"
 
+#include <SDL3/SDL_ttf.h>
+
 namespace backend {
 
 	SDL_Window* _window = nullptr;
@@ -11,6 +13,11 @@ namespace backend {
 
 		if (!SDL_Init(SDL_INIT_VIDEO)) {
 			SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
+			return;
+		}
+
+		if (!TTF_Init()) {
+			SDL_Log("Unable to initialize TTF: %s", SDL_GetError());
 			return;
 		}
 

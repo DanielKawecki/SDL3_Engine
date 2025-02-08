@@ -23,9 +23,9 @@ namespace game {
 		_player_count = 1;
 		create_players(1);
 
-		for (int i = 0; i < 5; ++i) {
+		/*for (int i = 0; i < 5; ++i) {
 			scene::create_object(10.f + i * 100.f, 10.f);
-		}
+		}*/
 	}
 
 	void create_players(int count) {

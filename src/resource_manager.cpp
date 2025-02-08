@@ -1,6 +1,8 @@
 #include "resource_manager.h"
 #include "renderer.h"
 
+#include <SDL3/SDL_ttf.h>
+
 #include <unordered_map>
 #include <iostream>
 #include <filesystem>
@@ -12,8 +14,25 @@ namespace resource_manager {
 	std::unordered_map<int, texture_data> _textures;
 	std::unordered_map<std::string, int> _texture_ids;
 
+	std::unordered_map<int, TTF_Font*> _fonts;
+
+	//TTF_Font* _font = nullptr;
+
 	void init() {
 		_renderer = renderer::get_renderer_pointer();
+	}
+
+	void load_font(std::string name, int size) {
+
+		std::string path = "res/fonts/" + name;
+		TTF_Font* font = TTF_OpenFont(path.c_str(), size);
+
+		if (!font) {
+			std::cout << "failed to load font\n";
+			return;
+		}
+
+		_fonts[size] = font;
 	}
 
 	void load_all_textures() {
@@ -68,6 +87,13 @@ namespace resource_manager {
 		}		
 
 		return nullptr;
+	}
+
+	TTF_Font* get_font(int size) {
+
+		if (_fonts.find(size) == _fonts.end()) load_font("basic.ttf", size);
+
+		return _fonts[size];
 	}
 
 }

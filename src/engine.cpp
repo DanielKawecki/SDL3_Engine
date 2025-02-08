@@ -12,7 +12,7 @@ void engine::run() {
 
 	backend::init();
 
-	resource_manager::load_textures();
+	resource_manager::load_all_textures();
 
 	if (!game::is_loaded()) 
 		game::create();
@@ -24,6 +24,12 @@ void engine::run() {
 		input::update();
 
 		game::update();
+
+
+		// Get rid of it
+		renderer::blit_text("Text 1", 18, mth::vec2(100, 200), SDL_Color(255, 255, 255, 200));
+		renderer::blit_text("Text 2", 20, mth::vec2(100, 250), SDL_Color(255, 255, 255, 232));
+		renderer::blit_text("Text 3", 22, mth::vec2(100, 300), SDL_Color(255, 255, 255, 255));
 
 		renderer::render_frame();
 
