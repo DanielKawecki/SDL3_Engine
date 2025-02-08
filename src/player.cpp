@@ -49,6 +49,7 @@ void player::upload_render_data() const {
 	data.w = 50.f;
 	data.h = 50.f;
 	data.color = color_type(0, 255, 0, 255);
+	data.texture = nullptr;
 
 	renderer::submit_render_data(data);
 }

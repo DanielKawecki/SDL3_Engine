@@ -1,5 +1,6 @@
 #include "backend.h"
 #include "renderer.h"
+#include "resource_manager.h"
 
 namespace backend {
 
@@ -22,6 +23,7 @@ namespace backend {
 		}
 
 		renderer::init();
+		resource_manager::init();
 	}
 
 	void create_window() {

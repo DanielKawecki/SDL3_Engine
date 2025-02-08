@@ -2,8 +2,8 @@
 #include "backend.h"
 #include "game.h"
 #include "scene.h"
+#include "resource_manager.h"
 
-#include <SDL3/SDL.h>
 #include <vector>
 #include <iostream>
 
@@ -38,9 +38,14 @@ namespace renderer {
 			SDL_FRect rect = { obj.x, obj.y, obj.w, obj.h };
 			color_type c = obj.color;
 
-			SDL_SetRenderDrawColor(_renderer, c.red, c.green, c.blue, c.alpha);
-			SDL_RenderFillRect(_renderer, &rect);
-			SDL_RenderRect(_renderer, &rect);
+			if (obj.texture) {
+				SDL_RenderTexture(_renderer, obj.texture, NULL, &rect);
+			}
+			else {
+				SDL_SetRenderDrawColor(_renderer, c.red, c.green, c.blue, c.alpha);
+				SDL_RenderFillRect(_renderer, &rect);
+				SDL_RenderRect(_renderer, &rect);
+			}
 		}
 
 		SDL_RenderPresent(_renderer);
@@ -48,6 +53,10 @@ namespace renderer {
 
 	void clean_up() {
 		SDL_DestroyRenderer(_renderer);
+	}
+
+	SDL_Renderer* get_renderer_pointer() {
+		return _renderer;
 	}
 
 }

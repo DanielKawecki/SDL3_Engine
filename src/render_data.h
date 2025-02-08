@@ -1,6 +1,9 @@
 #pragma once
 
+#include <SDL3/SDL.h>
+
 struct color_type {
+
 	int red;
 	int green;
 	int blue;
@@ -13,9 +16,11 @@ struct color_type {
 };
 
 struct render_data {
+
 	float x, y;
 	float w, h;
 	color_type color;
+	SDL_Texture* texture;
 
 	render_data() = default;
 
@@ -23,5 +28,6 @@ struct render_data {
 		color = color_type(255, 255, 255, 255); 
 		w = 20.f;
 		h = 20.f;
+		texture = nullptr;
 	}
 };
