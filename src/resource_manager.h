@@ -7,9 +7,12 @@
 #include <string>
 
 struct texture_data {
+	
 	int id;
 	std::string name;
 	SDL_Texture* texture;
+
+	//texture_data() = default;
 };
 
 namespace resource_manager {

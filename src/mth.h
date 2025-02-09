@@ -43,6 +43,11 @@ namespace mth {
         return { lhs.x + rhs, lhs.y + rhs };
     }
 
+   /* template<>
+    inline vec2 operator+=(const vec2& lhs, const vec2& rhs) {
+        return { lhs.x + rhs.x, lhs.y + rhs.y };
+    }*/
+
     template<typename T>
     inline vec2 operator-=(const vec2& lhs, T rhs) {
         return { lhs.x - rhs, lhs.y - rhs };

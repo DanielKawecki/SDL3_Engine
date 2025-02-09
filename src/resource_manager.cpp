@@ -25,7 +25,7 @@ namespace resource_manager {
 	void load_font(std::string name, int size) {
 
 		std::string path = "res/fonts/" + name;
-		TTF_Font* font = TTF_OpenFont(path.c_str(), size);
+		TTF_Font* font = TTF_OpenFont(path.c_str(), (float)size);
 
 		if (!font) {
 			std::cout << "failed to load font\n";

@@ -32,12 +32,12 @@ namespace renderer {
 
 	void render_frame() {
 
-		SDL_SetRenderDrawColor(_renderer, 15, 15, 15, 255);
+		SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
 		SDL_RenderClear(_renderer);
 
 		for (const render_data& obj : _render_queue) {
 
-			SDL_FRect rect = { obj.x, obj.y, obj.w, obj.h };
+			SDL_FRect rect = obj.rect;
 			SDL_Color color = obj.color;
 
 			if (obj.texture) {
@@ -48,6 +48,8 @@ namespace renderer {
 				SDL_RenderFillRect(_renderer, &rect);
 				SDL_RenderRect(_renderer, &rect);
 			}
+
+			if (obj.is_text) SDL_DestroyTexture(obj.texture);
 		}
 
 		SDL_RenderPresent(_renderer);
@@ -89,10 +91,11 @@ namespace renderer {
 		else {
 			render_data data = render_data();
 	
-			data.x = location.x;
-			data.y = location.y;
-			data.w = texture->w;
-			data.h = texture->h;
+			data.rect.x = location.x;
+			data.rect.y = location.y;
+			data.rect.w = (float)texture->w;
+			data.rect.h = (float)texture->h;
+			data.is_text = true;
 			data.texture = texture;
 
 			submit_render_data(data);

@@ -25,14 +25,9 @@ void engine::run() {
 
 		game::update();
 
-
-		// Get rid of it
-		renderer::blit_text("Text 1", 18, mth::vec2(100, 200), SDL_Color(255, 255, 255, 200));
-		renderer::blit_text("Text 2", 20, mth::vec2(100, 250), SDL_Color(255, 255, 255, 232));
-		renderer::blit_text("Text 3", 22, mth::vec2(100, 300), SDL_Color(255, 255, 255, 255));
+		renderer::blit_text("Text", 20, mth::vec2(100.f, 200.f), SDL_Color(255, 255, 255, 255));
 
 		renderer::render_frame();
-
 	}
 
 	backend::clean_up();

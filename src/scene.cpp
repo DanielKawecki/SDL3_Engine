@@ -17,10 +17,11 @@ namespace scene {
 		for (const object& obj : _objects) {
 			
 			render_data data = render_data();
-			data.x = obj.x;
-			data.y = obj.y;
-			data.w = obj.w;
-			data.h = obj.h;
+
+			data.rect.x = obj.x;
+			data.rect.y = obj.y;
+			data.rect.w = obj.w;
+			data.rect.h = obj.h;
 			data.color = SDL_Color(255, 255, 255, 255);
 			
 			renderer::submit_render_data(data);
