@@ -16,5 +16,6 @@ namespace renderer {
 	SDL_Renderer* get_renderer_pointer();
 	void test_textures();
 	void blit_text(std::string text, int size, mth::vec2 loaction, SDL_Color color);
+	void draw_line(float x1, float y1, float x2, float y2);
 
 }

@@ -5,13 +5,15 @@
 #include "resource_manager.h"
 
 #include <iostream>
+#include <cmath>
 
 player::player(int id) : _id(id) {}
 
 void player::update(float delta_time) {
 	
 	update_movement(delta_time);
-	update_frame();
+	update_frame(delta_time);
+	update_angle();
 	upload_render_data();
 }
 
@@ -39,28 +41,67 @@ void player::update_movement(float delta_time) {
 
 	if (mth::length(displacement) == 0.f) _state = player_state::idle;
 	else _state = player_state::walk;
+
+	if (displacement.x > 0.f && !_busy) _direction = player_facing::right;
+	else if (displacement.x < 0.f && !_busy) _direction = player_facing::left;
+
+	if (input::is_key_pressed(SDL_SCANCODE_L)) {
+		_state = player_state::attack;
+		_frame_index = 0;
+		_busy = true;
+	}
 }
 
-void player::update_frame() {
+void player::update_frame(float delta_time) {
+
+	_accumulator += delta_time;
+
+	if (_accumulator >= _frame_time) {
+		
+		_accumulator = 0.f;
+		_frame_index = (_frame_index + 1) % _frame_count;
+
+		if (_state == player_state::attack && _frame_index == 4) {
+			
+			_state = player_state::idle;
+			_frame_index = 0;
+			_busy = false;
+		}
+	}
 
 	if (_state == player_state::idle) {
-		_texture = resource_manager::get_texture_by_id(0);
+		_texture = resource_manager::get_texture_by_name("_Idle.png");
 	}
 	else if (_state == player_state::walk) {
-		_texture = resource_manager::get_texture_by_id(1);
+		_texture = resource_manager::get_texture_by_name("_Run.png");
 	}
+	else if (_state == player_state::attack) {
+		_texture = resource_manager::get_texture_by_name("_Attack.png");
+	}
+}
+
+void player::update_angle() {
+
+	int mouse_x = input::get_mouse_x();
+	int mouse_y = input::get_mouse_y();
+
+	float diff_x = (float)mouse_x - _position.x;
+	float diff_y = (float)mouse_y - _position.y;
+
+	_angle = atan2f(diff_y, diff_x) * (180.f / M_PI);
+
+	renderer::draw_line(_position.x, _position.y, mouse_x, mouse_y);
 }
 
 void player::upload_render_data() const {
 
 	render_data data = render_data();
-
-	data.rect.x = _position.x;
-	data.rect.y = _position.y;
-	data.rect.w = 50.f;
-	data.rect.h = 50.f;
-	data.color = SDL_Color(0, 255, 0, 255);
+	
+	data.src_rect = { 120.f * _frame_index, 0.f, 120.f, 80.f };
+	data.dst_rect = { _position.x - 180.f, _position.y - 140.f, 120.f * 3.f, 80.f * 3.f };
 	data.texture = _texture;
+
+	if (_direction == player_facing::left) data.flip = SDL_FLIP_HORIZONTAL;
 
 	renderer::submit_render_data(data);
 }
@@ -71,4 +112,8 @@ float player::get_x() const {
 
 float player::get_y() const {
 	return _position.y;
+}
+
+float player::get_angle() const {
+	return _angle;
 }

@@ -25,8 +25,6 @@ void engine::run() {
 
 		game::update();
 
-		renderer::blit_text("Text", 20, mth::vec2(100.f, 200.f), SDL_Color(255, 255, 255, 255));
-
 		renderer::render_frame();
 	}
 

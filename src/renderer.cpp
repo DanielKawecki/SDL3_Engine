@@ -15,6 +15,7 @@ namespace renderer {
 	SDL_Renderer* _renderer = nullptr;
 
 	std::vector<render_data> _render_queue;
+	std::vector<line_struct> _lines;
 
 	void init() {
 
@@ -24,6 +25,7 @@ namespace renderer {
 
 	void clear_render_queue() {
 		_render_queue.clear();
+		_lines.clear();
 	}
 
 	void submit_render_data(render_data data) {
@@ -37,19 +39,26 @@ namespace renderer {
 
 		for (const render_data& obj : _render_queue) {
 
-			SDL_FRect rect = obj.rect;
+			SDL_FRect src_rect = obj.src_rect;
+			SDL_FRect dst_rect = obj.dst_rect;
 			SDL_Color color = obj.color;
 
 			if (obj.texture) {
-				SDL_RenderTexture(_renderer, obj.texture, NULL, &rect);
+				SDL_RenderTextureRotated(_renderer, obj.texture, &src_rect, &dst_rect, (double)obj.rotation, nullptr, obj.flip);
 			}
 			else {
 				SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, color.a);
-				SDL_RenderFillRect(_renderer, &rect);
-				SDL_RenderRect(_renderer, &rect);
+				SDL_RenderFillRect(_renderer, &dst_rect);
+				SDL_RenderRect(_renderer, &dst_rect);
 			}
 
 			if (obj.is_text) SDL_DestroyTexture(obj.texture);
+		}
+
+		for (const line_struct& line : _lines) {
+
+			SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
+			SDL_RenderLine(_renderer, line.x1, line.y1, line.x2, line.y2);
 		}
 
 		SDL_RenderPresent(_renderer);
@@ -91,15 +100,25 @@ namespace renderer {
 		else {
 			render_data data = render_data();
 	
-			data.rect.x = location.x;
-			data.rect.y = location.y;
-			data.rect.w = (float)texture->w;
-			data.rect.h = (float)texture->h;
+			data.src_rect = { 0.f, 0.f, (float)texture->w, (float)texture->h };
+			data.dst_rect = { location.x, location.y, (float)texture->w, (float)texture->h };
 			data.is_text = true;
 			data.texture = texture;
 
 			submit_render_data(data);
 		}
+	}
+
+	void draw_line(float x1, float y1, float x2, float y2) {
+
+		line_struct line = line_struct();
+
+		line.x1 = x1;
+		line.y1 = y1;
+		line.x2 = x2;
+		line.y2 = y2;
+		
+		_lines.push_back(line);
 	}
 
 }

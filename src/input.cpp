@@ -10,6 +10,11 @@ namespace input {
 	bool _key_pressed[232];
 	bool _key_down_last_frame[232];
 
+	float _mouse_x = 0.f;
+	float _mouse_y = 0.f;
+	float _mouse_offset_x = 0.f;
+	float _mouse_offset_y = 0.f;
+
 	void update() {
 
 		// Event polling
@@ -50,6 +55,18 @@ namespace input {
 		if (keyboard_state[SDL_SCANCODE_ESCAPE]) {
 			backend::force_close_window();
 		}
+
+		// Mouse check
+
+		float x, y;
+
+		SDL_GetMouseState(&x, &y);
+
+		_mouse_offset_x = x - _mouse_x;
+		_mouse_offset_y = y - _mouse_y;
+
+		_mouse_x = x;
+		_mouse_y = y;
 	}
 
 	bool is_key_down(int sdl_scancode) {
@@ -58,6 +75,14 @@ namespace input {
 
 	bool is_key_pressed(int sdl_scancode) {
 		return _key_pressed[sdl_scancode];
+	}
+
+	int get_mouse_x() {
+		return (int)_mouse_x;
+	}
+
+	int get_mouse_y() {
+		return (int)_mouse_y;
 	}
 
 }

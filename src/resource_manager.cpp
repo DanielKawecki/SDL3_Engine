@@ -16,8 +16,6 @@ namespace resource_manager {
 
 	std::unordered_map<int, TTF_Font*> _fonts;
 
-	//TTF_Font* _font = nullptr;
-
 	void init() {
 		_renderer = renderer::get_renderer_pointer();
 	}
@@ -40,7 +38,7 @@ namespace resource_manager {
 		int id = 0;
 		SDL_Surface* surface = nullptr;
 
-		const std::filesystem::path base{ "res/textures/" };
+		const std::filesystem::path base{ "res/textures/player/" };
 
 		for (auto const& file : std::filesystem::directory_iterator{ base }) {
 
@@ -66,6 +64,7 @@ namespace resource_manager {
 		}
 
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(_renderer, surface);
+		SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
 
 		return texture;
 	}
@@ -83,7 +82,7 @@ namespace resource_manager {
 		if (_texture_ids.find(name) != _texture_ids.end()) {
 			
 			int id = _texture_ids[name];
-			get_texture_by_id(id);
+			return get_texture_by_id(id);
 		}		
 
 		return nullptr;
@@ -91,8 +90,7 @@ namespace resource_manager {
 
 	TTF_Font* get_font(int size) {
 
-		if (_fonts.find(size) == _fonts.end()) load_font("basic.ttf", size);
-
+		if (_fonts.find(size) == _fonts.end()) load_font("times_roman.ttf", size);
 		return _fonts[size];
 	}
 

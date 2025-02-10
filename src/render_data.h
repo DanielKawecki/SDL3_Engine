@@ -2,6 +2,12 @@
 
 #include <SDL3/SDL.h>
 
+struct line_struct {
+	
+	float x1, y1, x2, y2;
+	line_struct() = default;
+};
+
 struct color_type {
 
 	int red;
@@ -17,21 +23,29 @@ struct color_type {
 
 struct render_data {
 
-	SDL_FRect rect;
-	SDL_Color color;
-	SDL_Texture* texture;
-	bool is_text;
+	SDL_FRect		src_rect;
+	SDL_FRect		dst_rect;
+	SDL_Color		color;
+	SDL_Texture*	texture;
+	SDL_FlipMode	flip;
+	float			rotation;
+	bool			is_text;
+	bool			use_src_rect;
 
 	render_data() {
 	
 		is_text = false;
-		rect = SDL_FRect(0.f, 0.f, 10.f, 10.f);
+		use_src_rect = false;
+		flip = SDL_FLIP_NONE;
+		rotation = 0.f;
+		src_rect = SDL_FRect(0.f, 0.f, 10.f, 10.f);
+		dst_rect = SDL_FRect(0.f, 0.f, 10.f, 10.f);
 		color = SDL_Color(255, 255, 255, 255);
 		texture = nullptr;
 	};
 
-	render_data(SDL_FRect rect, SDL_Color color, SDL_Texture* texture, bool is_text = false) :
-		rect(rect), color(color), texture(texture), is_text(is_text) {}
+	/*render_data(SDL_FRect src_rect, SDL_FRect dst_rect, SDL_Color color, SDL_Texture* texture, bool is_text = false) :
+		src_rect(src_rect), dst_rect(dst_rect), color(color), texture(texture), is_text(is_text) {}*/
 };
 
 //struct render_data {

@@ -18,10 +18,12 @@ namespace scene {
 			
 			render_data data = render_data();
 
-			data.rect.x = obj.x;
+			data.src_rect = { 0.f, 0.f, 0.f, 0.f };
+			data.dst_rect = { obj.x, obj.y, obj.w, obj.h };
+			/*data.rect.x = obj.x;
 			data.rect.y = obj.y;
 			data.rect.w = obj.w;
-			data.rect.h = obj.h;
+			data.rect.h = obj.h;*/
 			data.color = SDL_Color(255, 255, 255, 255);
 			
 			renderer::submit_render_data(data);
