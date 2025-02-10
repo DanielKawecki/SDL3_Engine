@@ -25,6 +25,7 @@ private:
 	bool			_busy = false;
 	float			_angle = 0.f;
 	mth::vec2		_position = mth::vec2(100.f, 100.f);
+	mth::vec2		_mouse_direction = mth::vec2(0.f, 0.f);
 	player_state	_state = player_state::idle;
 	player_facing   _direction = player_facing::right;
 	SDL_Texture*	_texture = nullptr;
@@ -36,8 +37,9 @@ public:
 	void update(float delta_time);
 	void update_movement(float delta_time);
 	void update_frame(float delta_time);
-	void update_angle();
+	void update_mouse();
 	void upload_render_data() const;
+	//void shoot() const;
 
 	float get_x() const;
 	float get_y() const;

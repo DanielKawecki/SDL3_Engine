@@ -3,6 +3,7 @@
 #include "renderer.h"
 #include "render_data.h"
 #include "resource_manager.h"
+#include "scene.h"
 
 #include <iostream>
 #include <cmath>
@@ -13,7 +14,7 @@ void player::update(float delta_time) {
 	
 	update_movement(delta_time);
 	update_frame(delta_time);
-	update_angle();
+	update_mouse();
 	upload_render_data();
 }
 
@@ -44,12 +45,6 @@ void player::update_movement(float delta_time) {
 
 	if (displacement.x > 0.f && !_busy) _direction = player_facing::right;
 	else if (displacement.x < 0.f && !_busy) _direction = player_facing::left;
-
-	if (input::is_key_pressed(SDL_SCANCODE_L)) {
-		_state = player_state::attack;
-		_frame_index = 0;
-		_busy = true;
-	}
 }
 
 void player::update_frame(float delta_time) {
@@ -80,7 +75,7 @@ void player::update_frame(float delta_time) {
 	}
 }
 
-void player::update_angle() {
+void player::update_mouse() {
 
 	int mouse_x = input::get_mouse_x();
 	int mouse_y = input::get_mouse_y();
@@ -91,6 +86,12 @@ void player::update_angle() {
 	_angle = atan2f(diff_y, diff_x) * (180.f / M_PI);
 
 	renderer::draw_line(_position.x, _position.y, mouse_x, mouse_y);
+
+	if (input::is_key_pressed(SDL_SCANCODE_L)) {
+
+		mth::vec2 mouse_direction = mth::normalize(mth::vec2(diff_x, diff_y));
+		scene::create_bullet(_position, mouse_direction);
+	}
 }
 
 void player::upload_render_data() const {

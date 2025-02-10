@@ -34,7 +34,7 @@ namespace renderer {
 
 	void render_frame() {
 
-		SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
+		SDL_SetRenderDrawColor(_renderer, 100, 10, 100, 255);
 		SDL_RenderClear(_renderer);
 
 		for (const render_data& obj : _render_queue) {

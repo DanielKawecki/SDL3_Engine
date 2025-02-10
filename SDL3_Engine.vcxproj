@@ -154,6 +154,7 @@
     <ClCompile Include="src\backend.cpp" />
     <ClCompile Include="src\engine.cpp" />
     <ClCompile Include="src\game.cpp" />
+    <ClCompile Include="src\game_object.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\player.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="src\backend.h" />
     <ClInclude Include="src\engine.h" />
     <ClInclude Include="src\game.h" />
+    <ClInclude Include="src\game_object.h" />
     <ClInclude Include="src\input.h" />
     <ClInclude Include="src\mth.h" />
     <ClInclude Include="src\player.h" />

@@ -1,7 +1,4 @@
 #include "engine.h"
-#include "mth.h"
-
-#include <iostream>
 
 int main() {
 
