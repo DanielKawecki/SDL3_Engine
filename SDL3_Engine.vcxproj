@@ -161,6 +161,7 @@
     <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="src\resource_manager.cpp" />
     <ClCompile Include="src\scene.cpp" />
+    <ClCompile Include="src\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\backend.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="src\render_data.h" />
     <ClInclude Include="src\resource_manager.h" />
     <ClInclude Include="src\scene.h" />
+    <ClInclude Include="src\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

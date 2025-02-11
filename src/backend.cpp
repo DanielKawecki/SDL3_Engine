@@ -9,6 +9,9 @@ namespace backend {
 	SDL_Window* _window = nullptr;
 	bool _running = true;
 
+	int _screen_width = 1280;
+	int _screen_height = 720;
+
 	void init() {
 
 		if (!SDL_Init(SDL_INIT_VIDEO)) {
@@ -34,7 +37,7 @@ namespace backend {
 	}
 
 	void create_window() {
-		_window = SDL_CreateWindow("SDL3 Engine", 1280, 720, NULL);
+		_window = SDL_CreateWindow("SDL3 Engine", _screen_width, _screen_height, NULL);
 	}
 
 	bool is_window_open() {
@@ -54,6 +57,14 @@ namespace backend {
 		SDL_DestroyWindow(_window);
 		SDL_Quit();
 		renderer::clean_up();
+	}
+
+	int get_screen_width() {
+		return _screen_width;
+	}
+
+	int get_screen_height() {
+		return _screen_height;
 	}
 
 }

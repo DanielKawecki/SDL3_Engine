@@ -3,6 +3,7 @@
 #include "game.h"
 #include "render_data.h"
 #include "renderer.h"
+#include "backend.h"
 
 namespace scene {
 
@@ -10,9 +11,23 @@ namespace scene {
 
 	void update(float delta_time) {
 
+		remove_expired();
+
 		for (const std::unique_ptr<game_object>& object : _objects) {
 
 			object->update(delta_time);
+		}
+
+		update_collision();
+
+		upload_render_data();
+	}
+
+	void update_collision() {
+
+		for (const std::unique_ptr<game_object>& object : _objects) {
+
+			//if (object->_position.x > backend::get_screen_width()) object->_explode
 		}
 	}
 
@@ -21,25 +36,36 @@ namespace scene {
 		for (const std::unique_ptr<game_object>& object : _objects) {
 			
 			renderer::submit_render_data(object->create_render_data());
-			/*render_data data = render_data();
-
-			data.src_rect = { 0.f, 0.f, 0.f, 0.f };
-			data.dst_rect = { obj.positionx, obj.positiony, obj.w, obj.h };
-			data.color = SDL_Color(255, 255, 255, 255);*/
-			
-			//renderer::submit_render_data(data);
 		}
 	}
 
-	void create_object(float x, float y) {
+	void create_bullet(mth::vec2 position, mth::vec2 direction, float angle) {
 
-		//object r = object(x, y, 20.f, 20.f);
-		//_objects.push_back(std::make_unique<bullet>());
+		_objects.push_back(std::make_unique<bullet>(position, direction, angle));
 	}
 
-	void create_bullet(mth::vec2 position, mth::vec2 direction) {
+	void remove_expired() {
 
-		_objects.push_back(std::make_unique<bullet>(position, direction));
+		_objects.erase(std::remove_if(_objects.begin(), _objects.end(),
+			[](const std::unique_ptr<game_object>& object) { return object->get_remove(); }), _objects.end());
+	}
+
+	void display_debug() {
+
+		for (const std::unique_ptr<game_object>& object : _objects) {
+
+			render_data data = render_data();
+
+			data.dst_rect = { object->_position.x - 8.f, object->_position.y - 8.f, 16.f, 16.f };
+			data.filled = false;
+			data.layer = 100;
+
+			renderer::submit_render_data(data);
+		}
+	}
+
+	bool get_game_object_count() {
+		return _objects.size();
 	}
 
 }

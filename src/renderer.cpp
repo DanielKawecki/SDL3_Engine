@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 namespace renderer {
 
@@ -34,7 +35,9 @@ namespace renderer {
 
 	void render_frame() {
 
-		SDL_SetRenderDrawColor(_renderer, 100, 10, 100, 255);
+		//std::sort(_render_queue.begin(), _render_queue.end(), [](const render_data& a, const render_data& b) { a.layer > b.layer; });
+
+		SDL_SetRenderDrawColor(_renderer, 92, 86, 69, 255);
 		SDL_RenderClear(_renderer);
 
 		for (const render_data& obj : _render_queue) {
@@ -46,10 +49,14 @@ namespace renderer {
 			if (obj.texture) {
 				SDL_RenderTextureRotated(_renderer, obj.texture, &src_rect, &dst_rect, (double)obj.rotation, nullptr, obj.flip);
 			}
+			else if (obj.texture && obj.rotation == 0.f) {
+				SDL_RenderTexture(_renderer, obj.texture, &src_rect, &dst_rect);
+			}
 			else {
 				SDL_SetRenderDrawColor(_renderer, color.r, color.g, color.b, color.a);
-				SDL_RenderFillRect(_renderer, &dst_rect);
-				SDL_RenderRect(_renderer, &dst_rect);
+
+				if (obj.filled) SDL_RenderFillRect(_renderer, &dst_rect);
+				else SDL_RenderRect(_renderer, &dst_rect);
 			}
 
 			if (obj.is_text) SDL_DestroyTexture(obj.texture);
@@ -72,7 +79,7 @@ namespace renderer {
 		return _renderer;
 	}
 
-	void test_textures() {
+	/*void test_textures() {
 
 		for (int i = 0; i < 10; ++i) {
 
@@ -84,13 +91,13 @@ namespace renderer {
 			}
 		}
 	
-		//SDL_RenderPresent(_renderer);
-	}
+		SDL_RenderPresent(_renderer);
+	}*/
 
 	void blit_text(std::string text, int size, mth::vec2 location, SDL_Color color) {
 
 		TTF_Font* font = resource_manager::get_font(size);
-		SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), text.size(), color);
+		SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(font, text.c_str(), text.size(), color, 800);
 
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(_renderer, surface);
 		SDL_DestroySurface(surface);
@@ -104,6 +111,7 @@ namespace renderer {
 			data.dst_rect = { location.x, location.y, (float)texture->w, (float)texture->h };
 			data.is_text = true;
 			data.texture = texture;
+			data.layer = 100;
 
 			submit_render_data(data);
 		}

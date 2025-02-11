@@ -19,10 +19,13 @@ namespace resource_manager {
 
 	void init();
 	void load_font(std::string name, int size);
+	void render_glyphs(int size);
 	void load_all_textures();
 	SDL_Texture* load_texture(std::string path, SDL_Surface* surface);
 	SDL_Texture* get_texture_by_id(int id);
 	SDL_Texture* get_texture_by_name(std::string name);
+	SDL_Texture* get_font_atlas();
+	//SDL_Texture* get_glyph(char c);
 	TTF_Font* get_font(int size);
 
 }

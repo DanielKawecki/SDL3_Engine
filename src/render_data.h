@@ -21,6 +21,24 @@ struct color_type {
 		red(red), green(green), blue(blue), alpha(alpha) {}
 };
 
+struct animation_info {
+
+	int frame_index;
+	int frame_count;
+	float frame_time;
+	float frame_size_x;
+	float frame_size_y;
+
+	animation_info() {
+
+		frame_index = 0;
+		frame_count = 1;
+		frame_time = 0.05;
+		frame_size_x = 32.f;
+		frame_size_y = 32.f;
+	}
+};
+
 struct render_data {
 
 	SDL_FRect		src_rect;
@@ -31,17 +49,21 @@ struct render_data {
 	float			rotation;
 	bool			is_text;
 	bool			use_src_rect;
+	bool			filled;
+	int				layer;
 
 	render_data() {
 	
 		is_text = false;
 		use_src_rect = false;
+		filled = true;
 		flip = SDL_FLIP_NONE;
 		rotation = 0.f;
 		src_rect = SDL_FRect(0.f, 0.f, 10.f, 10.f);
 		dst_rect = SDL_FRect(0.f, 0.f, 10.f, 10.f);
 		color = SDL_Color(255, 255, 255, 255);
 		texture = nullptr;
+		layer = 1;
 	};
 
 	/*render_data(SDL_FRect src_rect, SDL_FRect dst_rect, SDL_Color color, SDL_Texture* texture, bool is_text = false) :

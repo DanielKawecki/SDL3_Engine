@@ -73,6 +73,8 @@ void player::update_frame(float delta_time) {
 	else if (_state == player_state::attack) {
 		_texture = resource_manager::get_texture_by_name("_Attack.png");
 	}
+
+	_hitbox = { _position.x - 32.f, _position.y - 20.f, 64.f, 128.f};
 }
 
 void player::update_mouse() {
@@ -85,12 +87,10 @@ void player::update_mouse() {
 
 	_angle = atan2f(diff_y, diff_x) * (180.f / M_PI);
 
-	renderer::draw_line(_position.x, _position.y, mouse_x, mouse_y);
-
-	if (input::is_key_pressed(SDL_SCANCODE_L)) {
+	if (input::mouse_left_pressed()) {
 
 		mth::vec2 mouse_direction = mth::normalize(mth::vec2(diff_x, diff_y));
-		scene::create_bullet(_position, mouse_direction);
+		scene::create_bullet(_position, mouse_direction, _angle);
 	}
 }
 
@@ -117,4 +117,8 @@ float player::get_y() const {
 
 float player::get_angle() const {
 	return _angle;
+}
+
+const SDL_FRect& player::get_hitbox() const {
+	return _hitbox;
 }

@@ -29,6 +29,7 @@ private:
 	player_state	_state = player_state::idle;
 	player_facing   _direction = player_facing::right;
 	SDL_Texture*	_texture = nullptr;
+	SDL_FRect		_hitbox = { 0.f, 0.f, 0.f, 0.f };
 
 public:
 
@@ -44,4 +45,5 @@ public:
 	float get_x() const;
 	float get_y() const;
 	float get_angle() const;
+	const SDL_FRect& get_hitbox() const;
 };

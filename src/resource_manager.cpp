@@ -15,9 +15,13 @@ namespace resource_manager {
 	std::unordered_map<std::string, int> _texture_ids;
 
 	std::unordered_map<int, TTF_Font*> _fonts;
+	//std::unordered_map<char, SDL_Texture*> _glyphs;
+	SDL_Texture* _font_atlas = nullptr;
 
 	void init() {
+
 		_renderer = renderer::get_renderer_pointer();
+		render_glyphs(22);
 	}
 
 	void load_font(std::string name, int size) {
@@ -33,12 +37,38 @@ namespace resource_manager {
 		_fonts[size] = font;
 	}
 
+	void render_glyphs(int size) {
+
+		TTF_Font* font = get_font(size);
+		SDL_Surface* surface = nullptr;
+		SDL_Color color = { 255, 255, 255, 255 };
+		
+		std::string symbols = "!@#$%^&*()_+-=[]{}|;:'\",.<>/? ";
+
+		for (char c = 'a'; c <= 'z'; ++c) {
+			symbols += c;
+		}
+
+		for (char c = 'A'; c <= 'Z'; ++c) {
+			symbols += c;
+		}
+
+		for (char c = '0'; c <= '9'; ++c) {
+			symbols += c;
+		}
+
+		surface = TTF_RenderText_Blended(font, symbols.c_str(), symbols.size(), color);
+		_font_atlas = SDL_CreateTextureFromSurface(_renderer, surface);
+
+		SDL_DestroySurface(surface);
+	}
+
 	void load_all_textures() {
 
 		int id = 0;
 		SDL_Surface* surface = nullptr;
 
-		const std::filesystem::path base{ "res/textures/player/" };
+		const std::filesystem::path base{ "res/textures/" };
 
 		for (auto const& file : std::filesystem::directory_iterator{ base }) {
 
@@ -87,6 +117,16 @@ namespace resource_manager {
 
 		return nullptr;
 	}
+
+	SDL_Texture* get_font_atlas() {
+		return _font_atlas;
+	}
+
+	//SDL_Texture* get_glyph(char c) {
+
+	//	if (_glyphs.find(c) == _glyphs.end()) return nullptr;//load_font("times_roman.ttf", size);
+	//	return _glyphs[c];
+	//}
 
 	TTF_Font* get_font(int size) {
 
