@@ -4,6 +4,11 @@
 #include "render_data.h"
 #include "renderer.h"
 #include "backend.h"
+#include "physics.h"
+
+#include <iostream>
+
+// Rewrite projectile class and separate it from other objects
 
 namespace scene {
 
@@ -25,9 +30,35 @@ namespace scene {
 
 	void update_collision() {
 
-		for (const std::unique_ptr<game_object>& object : _objects) {
+		for (int i = 0; i < _objects.size(); ++i) {
 
-			//if (object->_position.x > backend::get_screen_width()) object->_explode
+			//std::cout << i << "\n";
+
+			if (_objects[i]->is_projectile() && _objects[i]->_active == true) {
+				
+				for (int j = 0; j < _objects.size(); ++j) {
+
+					if (_objects[j]->is_wall()) {
+
+						if (physics::check_collision(_objects[i]->_hitbox, _objects[j]->_hitbox)) {
+
+							_objects[i]->collision();
+							_objects[i]->_active = false;
+						}
+					}
+
+					else if (_objects[j]->is_enemy()) {
+
+						if (physics::check_collision(_objects[i]->_hitbox, _objects[j]->_hitbox)) {
+
+							_objects[i]->collision();
+							_objects[j]->damage();
+							_objects[i]->_active = false;
+						}
+					}
+				}
+			}
+
 		}
 	}
 
@@ -41,7 +72,17 @@ namespace scene {
 
 	void create_bullet(mth::vec2 position, mth::vec2 direction, float angle) {
 
-		_objects.push_back(std::make_unique<bullet>(position, direction, angle));
+		_objects.push_back(std::make_unique<projectile>(position, direction, angle));
+	}
+
+	void create_wall(mth::vec2 position) {
+
+		_objects.push_back(std::make_unique<wall>(position));
+	}
+
+	void create_enemy(mth::vec2 position) {
+
+		_objects.push_back(std::make_unique<enemy>(position));
 	}
 
 	void remove_expired() {
@@ -56,7 +97,7 @@ namespace scene {
 
 			render_data data = render_data();
 
-			data.dst_rect = { object->_position.x - 8.f, object->_position.y - 8.f, 16.f, 16.f };
+			data.dst_rect = object->_hitbox;
 			data.filled = false;
 			data.layer = 100;
 
@@ -64,7 +105,7 @@ namespace scene {
 		}
 	}
 
-	bool get_game_object_count() {
+	size_t get_game_object_count() {
 		return _objects.size();
 	}
 

@@ -33,7 +33,7 @@ struct animation_info {
 
 		frame_index = 0;
 		frame_count = 1;
-		frame_time = 0.05;
+		frame_time = 0.05f;
 		frame_size_x = 32.f;
 		frame_size_y = 32.f;
 	}

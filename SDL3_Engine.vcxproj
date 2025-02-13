@@ -157,6 +157,7 @@
     <ClCompile Include="src\game_object.cpp" />
     <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\physics.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="src\resource_manager.cpp" />
@@ -170,6 +171,7 @@
     <ClInclude Include="src\game_object.h" />
     <ClInclude Include="src\input.h" />
     <ClInclude Include="src\mth.h" />
+    <ClInclude Include="src\physics.h" />
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\renderer.h" />
     <ClInclude Include="src\render_data.h" />

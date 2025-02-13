@@ -18,6 +18,8 @@ namespace game {
 
 	Uint64 _last_time = SDL_GetPerformanceCounter();
 	float _frequency = (float)SDL_GetPerformanceFrequency();
+	float _target_fps = 180.f;
+	float _frame_time = 1.f / _target_fps;
 	float _delta_time = 0.f;
 	float _time = 0.f;
 
@@ -31,6 +33,9 @@ namespace game {
 		_is_loaded = true;
 		_player_count = 1;
 		create_players(1);
+
+		scene::create_wall(mth::vec2(800.f, 350.f));
+		scene::create_enemy(mth::vec2(700.f, 200.f));
 	}
 
 	void create_players(int count) {
@@ -81,6 +86,11 @@ namespace game {
 			_fps = (int)(1.f / _delta_time);
 			std::cout << _fps << "fps\n";
 			_accumulator = 0.f;
+		}
+
+		// Frame rate limit
+		if (_frame_time > _delta_time) {
+			SDL_Delay((_frame_time - _delta_time) * 1000.f);
 		}
 	}
 
