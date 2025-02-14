@@ -107,18 +107,25 @@ enemy::enemy(mth::vec2 position) {
 
 	_angle = 0.f;
 	_remove = false;
-	_texture = resource_manager::get_texture_by_name("enemy_idle.png");
+	_texture = resource_manager::get_texture_by_name("enemy_walk.png");
 	_position = position;
 	_animation.frame_count = 4;
 	_animation.frame_size_x = 150.f;
 	_animation.frame_size_y = 150.f;
-	_animation.frame_time = 0.1f;
+	_animation.frame_time = 0.15f;
 	_src_rect = { 0.f, 0.f, _animation.frame_size_x, _animation.frame_size_y };
 	_hitbox = { _position.x, _position.y, 50.f, 80.f };
 	_dst_rect = { _position.x - 120.f, _position.y - 80.f, 256.f, 256.f };
+	_flip = SDL_FLIP_HORIZONTAL;
 }
 
 void enemy::update(float delta_time) {
+
+	mth::vec2 displacement = mth::vec2(-1.f, 0.3f);
+	displacement = mth::normalize(displacement) * 100.f;
+
+	_position.x += displacement.x * delta_time;
+	_position.y += displacement.y * delta_time;
 
 	_hitbox.x = _position.x;
 	_hitbox.y = _position.y;
@@ -161,6 +168,7 @@ game_object::game_object() {
 	_active = true;
 	_animation = animation_info();
 	_accumulator = 0.f;
+	_flip = SDL_FLIP_NONE;
 }
 
 void game_object::update(float delta_time) {
@@ -196,6 +204,7 @@ render_data game_object::create_render_data() const {
 	data.src_rect = _src_rect;
 	data.rotation = _angle;
 	data.dst_rect = _dst_rect;
+	data.flip = _flip;
 
 	return data;
 }

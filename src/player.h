@@ -18,7 +18,7 @@ class player {
 private:
 	int				_id;
 	int				_frame_index = 0;
-	float			_speed = 200.f;
+	float			_speed = 250.f;
 	float			_accumulator = 0.f;
 	float			_frame_time = 0.08f;
 	int				_frame_count = 10;

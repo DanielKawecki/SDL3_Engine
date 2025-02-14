@@ -51,9 +51,9 @@ namespace scene {
 
 						if (physics::check_collision(_objects[i]->_hitbox, _objects[j]->_hitbox)) {
 
+							_objects[i]->_active = false;
 							_objects[i]->collision();
 							_objects[j]->damage();
-							_objects[i]->_active = false;
 						}
 					}
 				}

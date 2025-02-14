@@ -12,6 +12,7 @@ public:
 	SDL_FRect		_src_rect;
 	SDL_FRect		_dst_rect;
 	SDL_Texture*	_texture;
+	SDL_FlipMode	_flip;
 	animation_info	_animation;
 	float			_accumulator;
 	float			_angle;
