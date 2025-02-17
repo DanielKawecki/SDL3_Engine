@@ -1,10 +1,10 @@
 #include "scene.h"
 #include "player.h"
 #include "game.h"
-#include "render_data.h"
-#include "renderer.h"
-#include "backend.h"
-#include "physics.h"
+#include "../Renderer/render_data.h"
+#include "../Renderer/renderer.h"
+#include "../Core/backend.h"
+#include "../Core/physics.h"
 
 #include <iostream>
 
@@ -24,6 +24,7 @@ namespace scene {
 		}
 
 		update_collision();
+		update_trace();
 
 		upload_render_data();
 	}
@@ -59,6 +60,19 @@ namespace scene {
 				}
 			}
 
+		}
+	}
+
+	void update_trace() {
+
+		for (int i = 0; i < _objects.size(); ++i) {
+
+			if (_objects[i]->is_enemy()) {
+				float player_x = game::get_player_by_id(0)->get_x();
+				float player_y = game::get_player_by_id(0)->get_y();
+
+				//_objects[i]
+			}
 		}
 	}
 

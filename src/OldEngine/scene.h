@@ -9,6 +9,7 @@ namespace scene {
 
 	void update(float delta_time);
 	void update_collision();
+	void update_trace();
 	void upload_render_data();
 
 	void create_bullet(mth::vec2 position, mth::vec2 direction, float angle);

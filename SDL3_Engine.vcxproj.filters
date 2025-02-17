@@ -15,82 +15,73 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\engine.cpp">
+    <ClInclude Include="src\Core\engine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\backend.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Core\asset_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Renderer\render_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\projectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\vec2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\component.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Core\engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\backend.cpp">
+    <ClCompile Include="src\Core\backend.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\input.cpp">
+    <ClCompile Include="src\Core\input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game.cpp">
+    <ClCompile Include="src\Core\asset_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\player.cpp">
+    <ClCompile Include="src\Renderer\renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\renderer.cpp">
+    <ClCompile Include="src\Game\game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\scene.cpp">
+    <ClCompile Include="src\Game\scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\resource_manager.cpp">
+    <ClCompile Include="src\Game\projectile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game_object.cpp">
+    <ClCompile Include="src\Game\player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\physics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\engine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\backend.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\mth.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\render_data.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\scene.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\resource_manager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\game_object.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\physics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

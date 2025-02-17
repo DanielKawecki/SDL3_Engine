@@ -18,6 +18,32 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Core\backend.h" />
+    <ClInclude Include="src\Core\engine.h" />
+    <ClInclude Include="src\Core\input.h" />
+    <ClInclude Include="src\Core\asset_manager.h" />
+    <ClInclude Include="src\Game\component.h" />
+    <ClInclude Include="src\Game\game.h" />
+    <ClInclude Include="src\Game\player.h" />
+    <ClInclude Include="src\Game\projectile.h" />
+    <ClInclude Include="src\Game\scene.h" />
+    <ClInclude Include="src\Renderer\renderer.h" />
+    <ClInclude Include="src\Renderer\render_data.h" />
+    <ClInclude Include="src\vec2.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Core\backend.cpp" />
+    <ClCompile Include="src\Core\engine.cpp" />
+    <ClCompile Include="src\Core\input.cpp" />
+    <ClCompile Include="src\Core\asset_manager.cpp" />
+    <ClCompile Include="src\Game\game.cpp" />
+    <ClCompile Include="src\Game\player.cpp" />
+    <ClCompile Include="src\Game\projectile.cpp" />
+    <ClCompile Include="src\Game\scene.cpp" />
+    <ClCompile Include="src\Renderer\renderer.cpp" />
+    <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -150,35 +176,6 @@
       <AdditionalDependencies>SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="src\backend.cpp" />
-    <ClCompile Include="src\engine.cpp" />
-    <ClCompile Include="src\game.cpp" />
-    <ClCompile Include="src\game_object.cpp" />
-    <ClCompile Include="src\input.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\physics.cpp" />
-    <ClCompile Include="src\player.cpp" />
-    <ClCompile Include="src\renderer.cpp" />
-    <ClCompile Include="src\resource_manager.cpp" />
-    <ClCompile Include="src\scene.cpp" />
-    <ClCompile Include="src\utils.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\backend.h" />
-    <ClInclude Include="src\engine.h" />
-    <ClInclude Include="src\game.h" />
-    <ClInclude Include="src\game_object.h" />
-    <ClInclude Include="src\input.h" />
-    <ClInclude Include="src\mth.h" />
-    <ClInclude Include="src\physics.h" />
-    <ClInclude Include="src\player.h" />
-    <ClInclude Include="src\renderer.h" />
-    <ClInclude Include="src\render_data.h" />
-    <ClInclude Include="src\resource_manager.h" />
-    <ClInclude Include="src\scene.h" />
-    <ClInclude Include="src\utils.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
