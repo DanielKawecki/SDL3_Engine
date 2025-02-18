@@ -6,9 +6,33 @@
 #include "scene.h"
 
 #include <iostream>
-#include <cmath>
 
-Player::Player() {}
+Player::Player() {
+
+	_transform.position = vec2(100.f);
+	_transform.rotation = 0.f;
+
+	_motion.velocity = vec2(0.f);
+	_motion.direction = vec2(0.f);
+	_motion.speed = 250.f;
+
+	_sprite.sizeX = 120.f;
+	_sprite.sizeY = 80.f;
+	_sprite.srcRect = { 0.f, 0.f, _sprite.sizeX, _sprite.sizeY };
+	_sprite.dstRect = { 100.f, 100.f, 360.f, 240.f };
+	_sprite.flip = SDL_FLIP_NONE;
+	_sprite.texture = nullptr;
+
+	_animation.frameIndex = 0;
+	_animation.frameCount = 10;
+	_animation.frameTime = 0.08f;
+	_animation.accumulator = 0.f;
+
+	_collision.active = true;
+	_collision.hitbox = { 0.f, 0.f, 64.f, 128.f };
+	_wallHitbox = { 0.f, 0.f, 30.f, 10.f };
+
+}
 
 Player::~Player() {}
 
@@ -22,62 +46,98 @@ void Player::Update(float deltaTime) {
 
 void Player::UpdateMovement(float deltaTime) {
 
-	vec2 direction(0.f);
+	_motion.direction = vec2(0.f);
 
 	if (Input::IsKeyDown(SDL_SCANCODE_W)) {
-		direction.y -= 1.f;
+		_motion.direction.y -= 1.f;
 	}
 	if (Input::IsKeyDown(SDL_SCANCODE_S)) {
-		direction.y += 1.f;
+		_motion.direction.y += 1.f;
 	}
 	if (Input::IsKeyDown(SDL_SCANCODE_A)) {
-		direction.x -= 1.f;
+		_motion.direction.x -= 1.f;
 	}
 	if (Input::IsKeyDown(SDL_SCANCODE_D)) {
-		direction.x += 1.f;
+		_motion.direction.x += 1.f;
 	}
 
-	vec2 displacement = direction.normalize() * _speed;
+	_motion.velocity = _motion.direction.normalize() * _motion.speed;
 
-	_position.x += displacement.x * deltaTime;
-	_position.y += displacement.y * deltaTime;
+	float newX = _wallHitbox.x + _motion.velocity.x * deltaTime;
+	float newY = _wallHitbox.y + _motion.velocity.y * deltaTime;
+	SDL_FRect xAxis = { newX, _wallHitbox.y, _wallHitbox.w, _wallHitbox.h };
+	SDL_FRect yAxis = { _wallHitbox.x, newY, _wallHitbox.w, _wallHitbox.h };
 
-	if (displacement.length() == 0.f) _state = PlayerState::idle;
-	else _state = PlayerState::walk;
+	vec2 reply = Scene::MoveController(xAxis, yAxis);
 
-	if (displacement.x > 0.f && !_busy) _direction = PlayerFacing::right;
-	else if (displacement.x < 0.f && !_busy) _direction = PlayerFacing::left;
+	if (reply.x) {
+
+		_transform.position.x += _motion.velocity.x * deltaTime;
+		_collision.hitbox.x = _transform.position.x - 32.f;
+		_wallHitbox.x = _transform.position.x - 20.f;
+	}
+
+	if (reply.y) {
+
+		_transform.position.y += _motion.velocity.y * deltaTime;
+		_collision.hitbox.y = _transform.position.y - 20.f;
+		_wallHitbox.y = _transform.position.y + 90.f;
+	}
+
+	if (_motion.velocity.length() == 0.f) _state = PlayerState::IDLE;
+	else _state = PlayerState::WALK;
+
+	if (_motion.velocity.x > 0.f && !_busy) _direction = PlayerFacing::RIGHT;
+	else if (_motion.velocity.x < 0.f && !_busy) _direction = PlayerFacing::LEFT;
+	
+	//_transform.position.x += _motion.velocity.x * deltaTime;
+	//_transform.position.y += _motion.velocity.y * deltaTime;
+
+	//if (_motion.velocity.length() == 0.f) _state = PlayerState::IDLE;
+	//else _state = PlayerState::WALK;
+
+	//if (_motion.velocity.x > 0.f && !_busy) _direction = PlayerFacing::RIGHT;
+	//else if (_motion.velocity.x < 0.f && !_busy) _direction = PlayerFacing::LEFT;
+
+	////_collision.hitbox = { _transform.position.x - 32.f, _transform.position.y - 20.f, 64.f, 128.f };
+	//_collision.hitbox.x = _transform.position.x - 32.f;
+	//_collision.hitbox.y = _transform.position.y - 20.f;
+
+	//_wallHitbox.x = _transform.position.x - 20.f;
+	//_wallHitbox.y = _transform.position.y + 90.f;
 }
 
 void Player::UpdateFrame(float deltaTime) {
 
-	_accumulator += deltaTime;
+	_animation.accumulator += deltaTime;
 
-	if (_accumulator >= _frameTime) {
+	if (_animation.accumulator >= _animation.frameTime) {
 
-		_accumulator = 0.f;
-		_frameIndex = (_frameIndex + 1) % _frameCount;
+		_animation.accumulator = 0.f;
+		_animation.frameIndex = (_animation.frameIndex + 1) % _animation.frameCount;
+		_sprite.srcRect.x = _sprite.sizeX * _animation.frameIndex;
 
-		if (_state == PlayerState::attack && _frameIndex == 4) {
+		if (_state == PlayerState::ATTACK && _animation.frameIndex == 4) {
 
-			_state = PlayerState::idle;
-			_frameIndex = 0;
+			_state = PlayerState::IDLE;
+			_animation.frameIndex = 0;
 			_busy = false;
 		}
 	}
 
-	if (_state == PlayerState::idle) {
-		_texture = AssetManager::GetTextureByName("_Idle.png");
+	if (_state == PlayerState::IDLE) {
+		_sprite.texture = AssetManager::GetTextureByName("_Idle.png");
 		//if (_texture == nullptr) std::cout << "nullptr\n";
 	}
-	else if (_state == PlayerState::walk) {
-		_texture = AssetManager::GetTextureByName("_Run.png");
+	else if (_state == PlayerState::WALK) {
+		_sprite.texture = AssetManager::GetTextureByName("_Run.png");
 	}
-	else if (_state == PlayerState::attack) {
-		_texture = AssetManager::GetTextureByName("_Attack.png");
+	else if (_state == PlayerState::ATTACK) {
+		_sprite.texture = AssetManager::GetTextureByName("_Attack.png");
 	}
 
-	_hitbox = { _position.x - 32.f, _position.y - 20.f, 64.f, 128.f };
+	_sprite.dstRect.x = _transform.position.x - 180.f;
+	_sprite.dstRect.y = _transform.position.y - 140.f;
 }
 
 void Player::UpdateMouse() {
@@ -85,15 +145,15 @@ void Player::UpdateMouse() {
 	int mouseX = Input::GetMouseX();
 	int mouseY = Input::GetMouseY();
 
-	float diffX = (float)mouseX - _position.x;
-	float diffY = (float)mouseY - _position.y;
+	float diffX = (float)mouseX - _transform.position.x;
+	float diffY = (float)mouseY - _transform.position.y;
 
-	_angle = atan2f(diffY, diffX) * (180.f / M_PI);
+	_transform.rotation = atan2f(diffY, diffX) * (180.f / M_PI);
 
 	if (Input::MouseLeftPressed()) {
 
 		vec2 mouseDirection = vec2(diffX, diffY);
-		Scene::AddProjectile(_position, mouseDirection, _angle);
+		Scene::AddProjectile(_transform.position, mouseDirection, _transform.rotation);
 	}
 }
 
@@ -101,27 +161,36 @@ void Player::UploadRenderData() const {
 
 	RenderData data = RenderData();
 
-	data.srcRect = { 120.f * _frameIndex, 0.f, 120.f, 80.f };
-	data.dstRect = { _position.x - 180.f, _position.y - 140.f, 120.f * 3.f, 80.f * 3.f };
-	data.texture = _texture;
+	data.srcRect = _sprite.srcRect;
+	data.dstRect = _sprite.dstRect;
+	data.texture = _sprite.texture;
+	data.layer = _wallHitbox.y;
 
-	if (_direction == PlayerFacing::left) data.flip = SDL_FLIP_HORIZONTAL;
+	if (_direction == PlayerFacing::LEFT) data.flip = SDL_FLIP_HORIZONTAL;
 
 	Renderer::SubmitRenderData(data);
 }
 
 float Player::GetX() const {
-	return _position.x;
+	return _transform.position.x;
 }
 
 float Player::GetY() const {
-	return _position.y;
+	return _transform.position.y;
+}
+
+vec2 Player::GetPosition() const {
+	return _transform.position;
 }
 
 float Player::GetAngle() const {
-	return _angle;
+	return _transform.rotation;
 }
 
-const SDL_FRect& Player::GetHitbox() const {
-	return _hitbox;
+SDL_FRect Player::GetHitbox() const {
+	return _collision.hitbox;
+}
+
+SDL_FRect Player::GetWallHitbox() const {
+	return _wallHitbox;
 }

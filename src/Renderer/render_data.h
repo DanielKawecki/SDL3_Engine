@@ -8,23 +8,23 @@ struct Line {
 	Line() = default;
 };
 
-struct AnimationInfo {
-
-	int		frame_index;
-	int		frame_count;
-	float	frame_time;
-	float	frame_size_x;
-	float	frame_size_y;
-
-	AnimationInfo() {
-
-		frame_index = 0;
-		frame_count = 1;
-		frame_time = 0.05f;
-		frame_size_x = 32.f;
-		frame_size_y = 32.f;
-	}
-};
+//struct AnimationInfo {
+//
+//	int		frame_index;
+//	int		frame_count;
+//	float	frame_time;
+//	float	frame_size_x;
+//	float	frame_size_y;
+//
+//	AnimationInfo() {
+//
+//		frame_index = 0;
+//		frame_count = 1;
+//		frame_time = 0.05f;
+//		frame_size_x = 32.f;
+//		frame_size_y = 32.f;
+//	}
+//};
 
 struct RenderData {
 
@@ -50,7 +50,7 @@ struct RenderData {
 		dstRect = SDL_FRect(0.f, 0.f, 10.f, 10.f);
 		color = SDL_Color(255, 255, 255, 255);
 		texture = nullptr;
-		layer = 1;
+		layer = 0;
 	};
 
 };

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../vec2.h"
+
 namespace Input {
 
 	void Update();
@@ -7,6 +9,7 @@ namespace Input {
 	bool IsKeyPressed(int sdl_scancode);
 	int GetMouseX();
 	int GetMouseY();
+	vec2 GetMousePos();
 	bool MouseLeftDown();
 	bool MouseMiddleDown();
 	bool MouseRightDown();

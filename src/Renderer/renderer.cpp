@@ -16,6 +16,7 @@ namespace Renderer {
 	SDL_Renderer* _renderer = nullptr;
 
 	std::vector<RenderData> _renderQueue;
+	//std::vector<RenderData> _debugQueue;
 	std::vector<Line> _lines;
 
 	void Initialize() {
@@ -26,6 +27,7 @@ namespace Renderer {
 
 	void ClearRenderQueue() {
 		_renderQueue.clear();
+		//_debugQueue.clear();
 		_lines.clear();
 	}
 
@@ -35,7 +37,7 @@ namespace Renderer {
 
 	void RenderFrame() {
 
-		//std::sort(_render_queue.begin(), _render_queue.end(), [](const render_data& a, const render_data& b) { a.layer > b.layer; });
+		std::sort(_renderQueue.begin(), _renderQueue.end(), [](RenderData a, RenderData b) { return a.layer < b.layer; });
 
 		SDL_SetRenderDrawColor(_renderer, 92, 86, 69, 255);
 		SDL_RenderClear(_renderer);
@@ -94,7 +96,7 @@ namespace Renderer {
 		SDL_RenderPresent(_renderer);
 	}*/
 
-	void BlitText(std::string text, int size, mth::vec2 location, SDL_Color color, bool backgroud) {
+	void BlitText(std::string text, int size, vec2 location, SDL_Color color, bool backgroud) {
 
 		TTF_Font* font = AssetManager::GetFont(size);
 		SDL_Surface* surface = nullptr;
@@ -135,6 +137,60 @@ namespace Renderer {
 		line.y2 = y2;
 		
 		_lines.push_back(line);
+	}
+
+	void DrawLine(vec2 p1, vec2 p2) {
+
+		Line line = Line();
+
+		line.x1 = p1.x;
+		line.y1 = p1.y;
+		line.x2 = p2.x;
+		line.y2 = p2.y;
+
+		_lines.push_back(line);
+	}
+
+	void DrawRect(float x, float y, float w, float h, bool fill) {
+
+		RenderData data;
+
+		data.dstRect = { x, y, w, h };
+		data.filled = fill;
+
+		_renderQueue.push_back(data);
+	}
+
+	void DrawRect(SDL_FRect rect, bool fill) {
+
+		RenderData data;
+
+		data.dstRect = rect;
+		data.filled = fill;
+		data.layer = rect.y;
+
+		_renderQueue.push_back(data);
+	}
+
+	void DrawPoint(float x, float y) {
+
+		RenderData data;
+
+		data.dstRect = { x, y, 2.f, 2.f };
+		data.filled = true;
+
+		_renderQueue.push_back(data);
+	}
+
+	void DrawPoint(vec2 point) {
+
+		RenderData data;
+
+		data.dstRect = { point.x, point.y, 2.f, 2.f };
+		data.filled = true;
+		data.color = { 255, 0, 0, 255 };
+
+		_renderQueue.push_back(data);
 	}
 
 }

@@ -129,6 +129,10 @@ namespace Input {
 		return (int)_mouseY;
 	}
 
+	vec2 GetMousePos() {
+		return vec2(_mouseX, _mouseY);
+	}
+
 	bool MouseLeftDown() {
 		return _mouseLeftDown;
 	}

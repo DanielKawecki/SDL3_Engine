@@ -1,11 +1,10 @@
 #include "game.h"
-//#include "player.h"
-//#include "scene.h"
 #include "../vec2.h"
 #include "../Renderer/renderer.h"
+#include "../Core/asset_manager.h"
 #include "../Core/input.h"
+#include "../util.h"
 #include "scene.h"
-//#include "utils.h"
 
 #include <SDL3/SDL.h>
 #include <vector>
@@ -35,34 +34,13 @@ namespace Game {
 	void Create() {
 		
 		_isLoaded = true;
-		//_player_count = 1;
-		//create_players(1);
-
-		//scene::create_wall(mth::vec2(800.f, 350.f));
-		//scene::create_enemy(mth::vec2(700.f, 200.f));
 		Scene::CreatePlayer();
-		Scene::AddProjectile(vec2(100.f, 400.f), vec2(1.f, 0.f), 0.f);
 	}
-
-	/*void create_players(int count) {
-		
-		_players.clear();
-
-		for (int i = 0; i < count; ++i)
-			_players.emplace_back(i);
-	}*/
-
-	/*player* get_player_by_id(int id) {
-		return &_players[id];
-	}*/
 
 	void Update() {
 
 		UpdateDeltaTime();
 		UpdateEvents();
-
-		/*for (int i = 0; i < _player_count; ++i) 
-			_players[i].update(_deltaTime);*/
 
 		Scene::Update(_deltaTime);
 
@@ -85,6 +63,9 @@ namespace Game {
 		if (Input::IsKeyPressed(SDL_SCANCODE_SLASH)) {
 			_console = true;
 			_command = "/";
+		}
+		if (Input::IsKeyPressed(SDL_SCANCODE_SPACE)) {
+			Scene::AddWall(Input::GetMousePos());
 		}
 	}
 
@@ -116,33 +97,26 @@ namespace Game {
 
 		std::string text = "";
 		text += std::to_string(_fps) + "fps\n";
-		text += "Mouse Pos: " + std::to_string(Input::GetMouseX()) + ", " + std::to_string(Input::GetMouseY()) + "\n";
-		//text += "Angle: " + std::to_string(_players[0].get_angle()) + "\n";
-		//text += "Objects: " + std::to_string(scene::get_game_object_count()) + "\n";
+		//text += "Mouse Pos: " + std::to_string(Input::GetMouseX()) + ", " + std::to_string(Input::GetMouseY()) + "\n";
 
-		Renderer::BlitText(text, 22, mth::vec2(10.f, 10.f), color, false);
+		Renderer::BlitText(text, 22, vec2(10.f), color, false);
 	}
 
 	void DisplayDebugLines() {
 
-		//float mouse_x = (float)input::get_mouse_x();
-		//float mouse_y = (float)input::get_mouse_y();
+		// Grid
+		/*float gridSize = 32.f;
+		vec2 position = Input::GetMousePos();
+		float posX = floor(position.x / gridSize) * gridSize;
+		float posY = floor(position.y / gridSize) * gridSize;
 
-		//float player_x = _players[0].get_x();
-		//float player_y = _players[0].get_y();
+		RenderData data;
+		data.texture = AssetManager::GetTextureByName("grid.png");
+		data.dstRect = { posX - 80.f, posY - 80.f, 160.f, 160.f };
+		data.srcRect = { 0.f, 0.f, 160.f, 160.f };
+		Renderer::SubmitRenderData(data);*/
 
-		//renderer::draw_line(player_x, player_y, mouse_x, mouse_y);
-
-		//Player* player = Scene::GetPlayer();
-
-		//RenderData data = RenderData();
-
-		////data.dstRect = player;
-		//data.filled = false;
-		//data.layer = 100;
-
-		//Renderer::SubmitRenderData(data);
-
+		// Hitboxes and stuff
 		Scene::DisplayDebug();
 	}
 
@@ -150,7 +124,7 @@ namespace Game {
 
 		SDL_Color color = { 255, 255, 255, 255 };
 
-		Renderer::BlitText(_command, 22, mth::vec2(10.f, 680.f), color, true);
+		Renderer::BlitText(_command, 22, vec2(10.f, 680.f), color, true);
 	}
 
 	void UpdateConsole() {
