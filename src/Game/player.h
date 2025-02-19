@@ -32,7 +32,7 @@ private:
 	PlayerFacing			_direction = PlayerFacing::RIGHT;
 	std::vector<Weapon*>	_weapons;
 	Weapon*					_equipedWeapon;
-	int						_weaponIndex;
+	int						_weaponIndex;	
 	bool					_busy = false;
 
 public:
@@ -52,4 +52,5 @@ public:
 	float GetAngle() const;
 	SDL_FRect GetHitbox() const;
 	SDL_FRect GetWallHitbox() const;
+	WeaponType GetWeaponType() const;
 };

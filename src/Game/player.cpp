@@ -32,6 +32,7 @@ Player::Player() {
 	_collision.hitbox = { 0.f, 0.f, 64.f, 128.f };
 	_wallHitbox = { 0.f, 0.f, 30.f, 10.f };
 
+	_weapons.push_back(new Pistol());
 	_weapons.push_back(new MachineGun());
 	_weaponIndex = 0;
 	_equipedWeapon = _weapons[_weaponIndex];
@@ -136,10 +137,12 @@ void Player::UpdateWeapons(float deltaTime) {
 	if (Input::IsKeyPressed(SDL_SCANCODE_Q)) {
 
 		_equipedWeapon->ResetAccumulator();
-		_weaponIndex = (_weaponIndex + 1) % (_weapons.size() - 1);
+		_weaponIndex = (_weaponIndex + 1) % (_weapons.size());
 		_equipedWeapon = _weapons[_weaponIndex];
+		//std::cout << _weaponIndex  << " " << _weapons.size() << "\n";
 	}
 
+	_equipedWeapon->Update(deltaTime);
 	// Do I need to update weapons that I am not using at the time?
 	//for (int i = 0; i < _weapons.size(); ++i) {
 	//	_weapons[i]->Update(deltaTime);
@@ -205,4 +208,8 @@ SDL_FRect Player::GetHitbox() const {
 
 SDL_FRect Player::GetWallHitbox() const {
 	return _wallHitbox;
+}
+
+WeaponType Player::GetWeaponType() const {
+	return _equipedWeapon->GetType();
 }

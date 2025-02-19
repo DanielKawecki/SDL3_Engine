@@ -5,6 +5,7 @@
 #include "../Core/input.h"
 #include "../util.h"
 #include "scene.h"
+#include "player.h"
 
 #include <SDL3/SDL.h>
 #include <vector>
@@ -95,9 +96,13 @@ namespace Game {
 
 		SDL_Color color = { 255, 255, 255, 255 };
 
+		std::string weapon = "";
+		if (Scene::GetPlayer()->GetWeaponType() == WeaponType::PISTOL) weapon = "Pistol";
+		else weapon = "Machine Gun";
+
 		std::string text = "";
 		text += std::to_string(_fps) + "fps\n";
-		//text += "Mouse Pos: " + std::to_string(Input::GetMouseX()) + ", " + std::to_string(Input::GetMouseY()) + "\n";
+		text += "Weapon: " + weapon + "\n";
 
 		Renderer::BlitText(text, 22, vec2(10.f), color, false);
 	}

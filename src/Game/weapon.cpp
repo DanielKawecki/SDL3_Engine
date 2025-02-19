@@ -3,13 +3,49 @@
 
 #include <iostream>
 
+// ------------------ Weapon ------------------
+
+Weapon::Weapon() {
+
+	_type = WeaponType::NONE;
+
+	_magCapacity = 0;
+	_magBullets = 0;
+	_automatic = false;
+
+	_reloading = false;
+	_accumulator = 0.f;
+	_reloadTime = 0.f;
+}
+
 Weapon::~Weapon() {}
+
+bool Weapon::IsAutomatic() const {
+	return _automatic;
+}
+
+void Weapon::Reload() {
+
+	_accumulator = 0.f;
+	_reloading = true;
+}
+
+void Weapon::ResetAccumulator() {
+	
+	_accumulator = 0.f;
+	_reloading = false;
+}
+
+WeaponType Weapon::GetType() const {
+	return _type;
+}
 
 // ------------------ Pistol ------------------
 
 
 Pistol::Pistol() {
 
+	_type = WeaponType::PISTOL;
 	_magCapacity = 7;
 	_magBullets = _magCapacity;
 	_automatic = false;
@@ -21,10 +57,6 @@ Pistol::Pistol() {
 
 Pistol::~Pistol() {
 
-}
-
-bool Pistol::IsAutomatic() const {
-	return _automatic;
 }
 
 void Pistol::Update(float deltaTime) {
@@ -49,27 +81,16 @@ void Pistol::Shoot(vec2 location, vec2 direction, float angle) {
 	}
 }
 
-void Pistol::Reload() {
-
-	_reloading = true;
-	_accumulator = 0.f;
-}
-
-void Pistol::ResetAccumulator() {
-
-	_reloading = false;
-	_accumulator = 0.f;
-}
-
 // ------------------ Machine Gun ------------------
 
 MachineGun::MachineGun() {
 
+	_type = WeaponType::MACHINE_GUN;
 	_magCapacity = 24;
 	_magBullets = _magCapacity;
 	_automatic = true;
 	_ready = false;
-	_fireRate = 10.f; // Shots per second
+	_fireRate = 7.f; // Shots per second
 	_fireInterval = 1.f / _fireRate;
 
 	_reloading = false;
@@ -79,17 +100,16 @@ MachineGun::MachineGun() {
 
 MachineGun::~MachineGun() {}
 
-bool MachineGun::IsAutomatic() const {
-	return _automatic;
-}
-
 void MachineGun::Update(float deltaTime) {
 
-	_accumulator += deltaTime;
-	if (_accumulator >= _fireInterval) {
+	if (!_reloading) {
 
-		_ready = true;
-		_accumulator;
+		_accumulator += deltaTime;
+		if (_accumulator >= _fireInterval) {
+
+			_ready = true;
+			_accumulator = 0.f;
+		}
 	}
 
 	if (_reloading) {
@@ -106,21 +126,10 @@ void MachineGun::Update(float deltaTime) {
 
 void MachineGun::Shoot(vec2 location, vec2 direction, float angle) {
 
-	if (_ready && _magBullets > 0 &&!_reloading) {
+	if (_ready && _magBullets > 0 && !_reloading) {
 
 		_magBullets -= 1;
+		_ready = false;
 		Scene::AddProjectile(location, direction, angle);
 	}
-}
-
-void MachineGun::Reload() {
-
-	_reloading = true;
-	_accumulator = 0.f;
-}
-
-void MachineGun::ResetAccumulator() {
-
-	_reloading = false;
-	_accumulator = 0.f;
 }
