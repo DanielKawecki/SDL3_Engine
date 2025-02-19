@@ -32,6 +32,9 @@ Player::Player() {
 	_collision.hitbox = { 0.f, 0.f, 64.f, 128.f };
 	_wallHitbox = { 0.f, 0.f, 30.f, 10.f };
 
+	_weapons.push_back(new Pistol());
+	_equipedWeapon = _weapons[0];
+
 }
 
 Player::~Player() {}
@@ -40,6 +43,7 @@ void Player::Update(float deltaTime) {
 
 	UpdateMovement(deltaTime);
 	UpdateFrame(deltaTime);
+	UpdateWeapons(deltaTime);
 	UpdateMouse();
 	UploadRenderData();
 }
@@ -89,22 +93,6 @@ void Player::UpdateMovement(float deltaTime) {
 
 	if (_motion.velocity.x > 0.f && !_busy) _direction = PlayerFacing::RIGHT;
 	else if (_motion.velocity.x < 0.f && !_busy) _direction = PlayerFacing::LEFT;
-	
-	//_transform.position.x += _motion.velocity.x * deltaTime;
-	//_transform.position.y += _motion.velocity.y * deltaTime;
-
-	//if (_motion.velocity.length() == 0.f) _state = PlayerState::IDLE;
-	//else _state = PlayerState::WALK;
-
-	//if (_motion.velocity.x > 0.f && !_busy) _direction = PlayerFacing::RIGHT;
-	//else if (_motion.velocity.x < 0.f && !_busy) _direction = PlayerFacing::LEFT;
-
-	////_collision.hitbox = { _transform.position.x - 32.f, _transform.position.y - 20.f, 64.f, 128.f };
-	//_collision.hitbox.x = _transform.position.x - 32.f;
-	//_collision.hitbox.y = _transform.position.y - 20.f;
-
-	//_wallHitbox.x = _transform.position.x - 20.f;
-	//_wallHitbox.y = _transform.position.y + 90.f;
 }
 
 void Player::UpdateFrame(float deltaTime) {
@@ -140,6 +128,16 @@ void Player::UpdateFrame(float deltaTime) {
 	_sprite.dstRect.y = _transform.position.y - 140.f;
 }
 
+void Player::UpdateWeapons(float deltaTime) {
+
+	if (Input::IsKeyPressed(SDL_SCANCODE_R)) _equipedWeapon->Reload();
+
+	// Do I need to update weapons that I am not using at the time?
+	for (int i = 0; i < _weapons.size(); ++i) {
+		_weapons[i]->Update(deltaTime);
+	}
+}
+
 void Player::UpdateMouse() {
 
 	int mouseX = Input::GetMouseX();
@@ -150,10 +148,16 @@ void Player::UpdateMouse() {
 
 	_transform.rotation = atan2f(diffY, diffX) * (180.f / M_PI);
 
-	if (Input::MouseLeftPressed()) {
+	if (_equipedWeapon) {
 
 		vec2 mouseDirection = vec2(diffX, diffY);
-		Scene::AddProjectile(_transform.position, mouseDirection, _transform.rotation);
+
+		if (Input::MouseLeftDown() && _equipedWeapon->IsAutomatic()) {
+			_equipedWeapon->Shoot(_transform.position, mouseDirection, _transform.rotation);	
+		}
+		else if (Input::MouseLeftPressed() && !_equipedWeapon->IsAutomatic()) {
+			_equipedWeapon->Shoot(_transform.position, mouseDirection, _transform.rotation);
+		}
 	}
 }
 

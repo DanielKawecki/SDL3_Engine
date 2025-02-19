@@ -29,6 +29,7 @@
     <ClInclude Include="src\Game\projectile.h" />
     <ClInclude Include="src\Game\scene.h" />
     <ClInclude Include="src\Game\wall.h" />
+    <ClInclude Include="src\Game\weapon.h" />
     <ClInclude Include="src\Renderer\renderer.h" />
     <ClInclude Include="src\Renderer\render_data.h" />
     <ClInclude Include="src\util.h" />
@@ -44,6 +45,7 @@
     <ClCompile Include="src\Game\projectile.cpp" />
     <ClCompile Include="src\Game\scene.cpp" />
     <ClCompile Include="src\Game\wall.cpp" />
+    <ClCompile Include="src\Game\weapon.cpp" />
     <ClCompile Include="src\Renderer\renderer.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\util.cpp" />
