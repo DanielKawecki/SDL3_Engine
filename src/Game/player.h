@@ -32,6 +32,7 @@ private:
 	PlayerFacing			_direction = PlayerFacing::RIGHT;
 	std::vector<Weapon*>	_weapons;
 	Weapon*					_equipedWeapon;
+	int						_weaponIndex;
 	bool					_busy = false;
 
 public:

@@ -32,8 +32,9 @@ Player::Player() {
 	_collision.hitbox = { 0.f, 0.f, 64.f, 128.f };
 	_wallHitbox = { 0.f, 0.f, 30.f, 10.f };
 
-	_weapons.push_back(new Pistol());
-	_equipedWeapon = _weapons[0];
+	_weapons.push_back(new MachineGun());
+	_weaponIndex = 0;
+	_equipedWeapon = _weapons[_weaponIndex];
 
 }
 
@@ -132,10 +133,17 @@ void Player::UpdateWeapons(float deltaTime) {
 
 	if (Input::IsKeyPressed(SDL_SCANCODE_R)) _equipedWeapon->Reload();
 
-	// Do I need to update weapons that I am not using at the time?
-	for (int i = 0; i < _weapons.size(); ++i) {
-		_weapons[i]->Update(deltaTime);
+	if (Input::IsKeyPressed(SDL_SCANCODE_Q)) {
+
+		_equipedWeapon->ResetAccumulator();
+		_weaponIndex = (_weaponIndex + 1) % (_weapons.size() - 1);
+		_equipedWeapon = _weapons[_weaponIndex];
 	}
+
+	// Do I need to update weapons that I am not using at the time?
+	//for (int i = 0; i < _weapons.size(); ++i) {
+	//	_weapons[i]->Update(deltaTime);
+	//}
 }
 
 void Player::UpdateMouse() {
