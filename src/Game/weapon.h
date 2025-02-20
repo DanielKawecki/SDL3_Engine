@@ -1,37 +1,41 @@
 #pragma once
 
+#include <string>
 class vec2;
 
-enum class WeaponType {
-	NONE,
-	PISTOL,
-	MACHINE_GUN,
-	SHOTGUN
+//enum class WeaponType {
+//	NONE,
+//	PISTOL,
+//	MACHINE_GUN,
+//	SHOTGUN
+//};
+
+struct WeaponInfo {
+	std::string		name;
+	int				magCapacity;
+	bool			automatic;
+	float			reloadTime;
+	float			fireRate;
+	//WeaponType	type;
 };
 
 class Weapon {
 
 protected:
-	WeaponType _type;
-
-	int		_magCapacity;
+	WeaponInfo _info;
 	int		_magBullets;
-	bool	_automatic;
-
 	bool	_reloading;
 	float	_accumulator;
-	float	_reloadTime;
 
 public:
 	Weapon();
 	virtual ~Weapon();
 
-	bool IsAutomatic() const;
+	WeaponInfo* GetWeaponInfo();
 	virtual void Update(float deltaTime) = 0;
 	virtual void Shoot(vec2 location, vec2 direction, float angle) = 0;
 	virtual void Reload();
 	void ResetAccumulator();
-	WeaponType GetType() const;
 };
 
 class Pistol : public Weapon {
@@ -48,12 +52,25 @@ class MachineGun : public Weapon {
 
 private:
 	bool	_ready;
-	float	_fireRate;
 	float	_fireInterval;
 
 public:
 	MachineGun();
 	~MachineGun();
+
+	void Update(float deltaTime) override;
+	void Shoot(vec2 location, vec2 direction, float angle) override;
+};
+
+class Shotgun : public Weapon {
+
+private:
+	bool	_ready;
+	float	_fireInterval;
+
+public:
+	Shotgun();
+	~Shotgun();
 
 	void Update(float deltaTime) override;
 	void Shoot(vec2 location, vec2 direction, float angle) override;

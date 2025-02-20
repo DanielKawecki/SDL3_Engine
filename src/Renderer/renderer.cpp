@@ -167,7 +167,7 @@ namespace Renderer {
 
 		data.dstRect = rect;
 		data.filled = fill;
-		data.layer = rect.y;
+		data.layer = 9999;
 
 		_renderQueue.push_back(data);
 	}

@@ -1,7 +1,6 @@
 #include "scene.h"
 #include "projectile.h"
-#include "player.h"
-#include "wall.h"
+#include "../Player/player.h"
 #include "../Core/input.h"
 #include "../Renderer/renderer.h"
 
@@ -13,6 +12,35 @@ namespace Scene {
 	Player* _player = nullptr;
 	std::vector<Projectile> _projectiles;
 	std::vector<Wall> _walls;
+	std::vector<std::vector<int>> _map;
+	std::vector<const char*> _map2;
+
+	void CreateMap() {
+
+		_map = {
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 2, 1, 1, 1, 1, 1, 0, 0, 0},
+			{0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 4, 1, 1, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		};
+
+		for (int i = 0; i < _map.size(); ++i) {
+			for (int j = 0; j < _map[0].size(); ++j) {
+
+				if (_map[i][j] == 1) AddWall(vec2(j * 64.f, i * 64.f), WallType::FRONT);
+				else if (_map[i][j] == 2) AddWall(vec2(j * 64.f, i * 64.f), WallType::CORNER_LEFT);
+				else if (_map[i][j] == 3) AddWall(vec2(j * 64.f, i * 64.f), WallType::MIDDLE_TOP);
+				else if (_map[i][j] == 4) AddWall(vec2(j * 64.f, i * 64.f), WallType::HALF_LEFT);
+				else if (_map[i][j] == 5) AddWall(vec2(j * 64.f, i * 64.f), WallType::CORNER_RIGHT);
+				else if (_map[i][j] == 6) AddWall(vec2(j * 64.f, i * 64.f), WallType::HALF_RIGHT);
+				else if (_map[i][j] == 7) AddWall(vec2(j * 64.f, i * 64.f), WallType::MIDDLE_FRONT);
+			}
+		}
+	}
 
 	void CreatePlayer() {
 		_player = new Player();
@@ -26,13 +54,14 @@ namespace Scene {
 		_projectiles.push_back(Projectile(position, direction, angle));
 	}
 
-	void AddWall(vec2 position) {
+	void AddWall(vec2 position, WallType type) {
 
 		float gridSize = 32.f;
 		float posX = floor(position.x / gridSize) * gridSize;
 		float posY = floor(position.y / gridSize) * gridSize;
+		vec2 pos = vec2(posX, posY);
 
-		_walls.push_back(Wall(vec2(posX, posY)));
+		_walls.push_back(Wall(pos, type));
 	}
 
 	void Update(float deltaTime) {

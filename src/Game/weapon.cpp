@@ -7,21 +7,20 @@
 
 Weapon::Weapon() {
 
-	_type = WeaponType::NONE;
+	_info.name = "";
+	_info.magCapacity = 0;
+	_info.reloadTime = 0.f;
+	_info.automatic = false;
 
-	_magCapacity = 0;
 	_magBullets = 0;
-	_automatic = false;
-
 	_reloading = false;
 	_accumulator = 0.f;
-	_reloadTime = 0.f;
 }
 
 Weapon::~Weapon() {}
 
-bool Weapon::IsAutomatic() const {
-	return _automatic;
+WeaponInfo* Weapon::GetWeaponInfo() {
+	return &_info;
 }
 
 void Weapon::Reload() {
@@ -36,23 +35,19 @@ void Weapon::ResetAccumulator() {
 	_reloading = false;
 }
 
-WeaponType Weapon::GetType() const {
-	return _type;
-}
-
 // ------------------ Pistol ------------------
 
 
 Pistol::Pistol() {
 
-	_type = WeaponType::PISTOL;
-	_magCapacity = 7;
-	_magBullets = _magCapacity;
-	_automatic = false;
+	_info.name = "1911";
+	_info.magCapacity = 7;
+	_info.reloadTime = 2.f;
+	_info.automatic = false;
 
+	_magBullets = _info.magCapacity;
 	_reloading = false;
 	_accumulator = 0.f;
-	_reloadTime = 2.f;
 }
 
 Pistol::~Pistol() {
@@ -64,10 +59,10 @@ void Pistol::Update(float deltaTime) {
 	if (_reloading) {
 
 		_accumulator += deltaTime;
-		if (_accumulator >= _reloadTime) {
+		if (_accumulator >= _info.reloadTime) {
 
 			_reloading = false;
-			_magBullets = _magCapacity;
+			_magBullets = _info.magCapacity;
 		}
 	}
 }
@@ -85,17 +80,17 @@ void Pistol::Shoot(vec2 location, vec2 direction, float angle) {
 
 MachineGun::MachineGun() {
 
-	_type = WeaponType::MACHINE_GUN;
-	_magCapacity = 24;
-	_magBullets = _magCapacity;
-	_automatic = true;
-	_ready = false;
-	_fireRate = 7.f; // Shots per second
-	_fireInterval = 1.f / _fireRate;
+	_info.name = "AK47";
+	_info.magCapacity = 24;
+	_info.reloadTime = 2.4f;
+	_info.fireRate = 7.f; // Shots per second
+	_info.automatic = true;
 
+	_magBullets = _info.magCapacity;
+	_ready = false;
+	_fireInterval = 1.f / _info.fireRate;
 	_reloading = false;
 	_accumulator = 0.f;
-	_reloadTime = 2.4f;
 }
 
 MachineGun::~MachineGun() {}
@@ -108,17 +103,16 @@ void MachineGun::Update(float deltaTime) {
 		if (_accumulator >= _fireInterval) {
 
 			_ready = true;
-			_accumulator = 0.f;
 		}
 	}
 
-	if (_reloading) {
+	else if (_reloading) {
 
 		_accumulator += deltaTime;
-		if (_accumulator >= _reloadTime) {
+		if (_accumulator >= _info.reloadTime) {
 
 			_reloading = false;
-			_magBullets = _magCapacity;
+			_magBullets = _info.magCapacity;
 			_accumulator = 0.f;
 		}
 	}
@@ -129,7 +123,71 @@ void MachineGun::Shoot(vec2 location, vec2 direction, float angle) {
 	if (_ready && _magBullets > 0 && !_reloading) {
 
 		_magBullets -= 1;
+		_accumulator = 0.f;
 		_ready = false;
+
 		Scene::AddProjectile(location, direction, angle);
+	}
+}
+
+Shotgun::Shotgun() {
+
+	_info.name = "SPAS";
+	_info.automatic = false;
+	_info.magCapacity = 6;
+	_info.fireRate = 0.75f;
+
+	_magBullets = _info.magCapacity;
+	_ready = false;
+	_fireInterval = 1.f / _info.fireRate;
+}
+
+Shotgun::~Shotgun() {}
+
+void Shotgun::Update(float deltaTime) {
+
+	if (!_reloading) {
+
+		_accumulator += deltaTime;
+		if (_accumulator >= _fireInterval) {
+
+			_ready = true;
+		}
+	}
+
+	else if (_reloading) {
+
+		_accumulator += deltaTime;
+		if (_accumulator >= _info.reloadTime) {
+
+			_reloading = false;
+			_magBullets = _info.magCapacity;
+			_accumulator = 0.f;
+		}
+	}
+}
+
+void Shotgun::Shoot(vec2 location, vec2 direction, float angle) {
+
+	if (_ready && _magBullets > 0 && !_reloading) {
+
+		_magBullets -= 1;
+		_accumulator = 0.f;
+		_ready = false;
+
+		float angleDiff = 0.0698131701f;
+
+		vec2 dir;
+		dir.x = direction.x * cosf(angleDiff) - direction.y * sinf(angleDiff);
+		dir.y = direction.x * sinf(angleDiff) + direction.y * cosf(angleDiff);
+
+		Scene::AddProjectile(location, dir, angle);
+		Scene::AddProjectile(location, direction, angle);
+
+		dir.x = direction.x * cosf(-angleDiff) - direction.y * sinf(-angleDiff);
+		dir.y = direction.x * sinf(-angleDiff) + direction.y * cosf(-angleDiff);
+
+		Scene::AddProjectile(location, dir, angle);
+		//Scene::AddProjectile(location, direction, angle);
 	}
 }

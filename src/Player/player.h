@@ -3,8 +3,8 @@
 #include <SDL3/SDL.h>
 #include <vector>
 #include "../vec2.h"
-#include "component.h"
-#include "weapon.h"
+#include "../Game/component.h"
+#include "../Game/weapon.h"
 
 enum class PlayerState {
 	IDLE,
@@ -42,9 +42,14 @@ public:
 	void Update(float delta_time);
 	void UpdateMovement(float delta_time);
 	void UpdateFrame(float delta_time);
-	void UpdateWeapons(float deltaTime);
+	void UpdateWeapon(float deltaTime);
 	void UpdateMouse();
 	void UploadRenderData() const;
+
+	void UpdateUI();
+	void UpdateInput();
+	void ReloadWeapon();
+	void ChangeWeapon();
 
 	float GetX() const;
 	float GetY() const;
@@ -52,5 +57,5 @@ public:
 	float GetAngle() const;
 	SDL_FRect GetHitbox() const;
 	SDL_FRect GetWallHitbox() const;
-	WeaponType GetWeaponType() const;
+	WeaponInfo* GetCurrentWeaponInfo() const;
 };

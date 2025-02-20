@@ -1,5 +1,6 @@
 #pragma once
 
+#include "wall.h"
 #include "../vec2.h"
 #include <SDL3/SDL.h>
 
@@ -7,10 +8,11 @@ class Player;
 
 namespace Scene {
 
+	void CreateMap();
 	void CreatePlayer();
 	Player* GetPlayer();
 	void AddProjectile(vec2 position, vec2 direction, float angle);
-	void AddWall(vec2 position);
+	void AddWall(vec2 position, WallType type);
 
 	void Update(float deltaTime);
 	void UpdateCollision();

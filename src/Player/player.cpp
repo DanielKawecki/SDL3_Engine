@@ -3,7 +3,8 @@
 #include "../Renderer/renderer.h"
 #include "../Renderer/render_data.h"
 #include "../Core/asset_manager.h"
-#include "scene.h"
+#include "../Game/scene.h"
+#include "../Game/game.h"
 
 #include <iostream>
 
@@ -34,6 +35,7 @@ Player::Player() {
 
 	_weapons.push_back(new Pistol());
 	_weapons.push_back(new MachineGun());
+	_weapons.push_back(new Shotgun());
 	_weaponIndex = 0;
 	_equipedWeapon = _weapons[_weaponIndex];
 
@@ -43,29 +45,19 @@ Player::~Player() {}
 
 void Player::Update(float deltaTime) {
 
+	if (!Game::IsEditorOpen()) {
+		UpdateInput();
+		UpdateMouse();
+	}
+
+	UpdateUI();
 	UpdateMovement(deltaTime);
 	UpdateFrame(deltaTime);
-	UpdateWeapons(deltaTime);
-	UpdateMouse();
+	UpdateWeapon(deltaTime);
 	UploadRenderData();
 }
 
 void Player::UpdateMovement(float deltaTime) {
-
-	_motion.direction = vec2(0.f);
-
-	if (Input::IsKeyDown(SDL_SCANCODE_W)) {
-		_motion.direction.y -= 1.f;
-	}
-	if (Input::IsKeyDown(SDL_SCANCODE_S)) {
-		_motion.direction.y += 1.f;
-	}
-	if (Input::IsKeyDown(SDL_SCANCODE_A)) {
-		_motion.direction.x -= 1.f;
-	}
-	if (Input::IsKeyDown(SDL_SCANCODE_D)) {
-		_motion.direction.x += 1.f;
-	}
 
 	_motion.velocity = _motion.direction.normalize() * _motion.speed;
 
@@ -130,48 +122,6 @@ void Player::UpdateFrame(float deltaTime) {
 	_sprite.dstRect.y = _transform.position.y - 140.f;
 }
 
-void Player::UpdateWeapons(float deltaTime) {
-
-	if (Input::IsKeyPressed(SDL_SCANCODE_R)) _equipedWeapon->Reload();
-
-	if (Input::IsKeyPressed(SDL_SCANCODE_Q)) {
-
-		_equipedWeapon->ResetAccumulator();
-		_weaponIndex = (_weaponIndex + 1) % (_weapons.size());
-		_equipedWeapon = _weapons[_weaponIndex];
-		//std::cout << _weaponIndex  << " " << _weapons.size() << "\n";
-	}
-
-	_equipedWeapon->Update(deltaTime);
-	// Do I need to update weapons that I am not using at the time?
-	//for (int i = 0; i < _weapons.size(); ++i) {
-	//	_weapons[i]->Update(deltaTime);
-	//}
-}
-
-void Player::UpdateMouse() {
-
-	int mouseX = Input::GetMouseX();
-	int mouseY = Input::GetMouseY();
-
-	float diffX = (float)mouseX - _transform.position.x;
-	float diffY = (float)mouseY - _transform.position.y;
-
-	_transform.rotation = atan2f(diffY, diffX) * (180.f / M_PI);
-
-	if (_equipedWeapon) {
-
-		vec2 mouseDirection = vec2(diffX, diffY);
-
-		if (Input::MouseLeftDown() && _equipedWeapon->IsAutomatic()) {
-			_equipedWeapon->Shoot(_transform.position, mouseDirection, _transform.rotation);	
-		}
-		else if (Input::MouseLeftPressed() && !_equipedWeapon->IsAutomatic()) {
-			_equipedWeapon->Shoot(_transform.position, mouseDirection, _transform.rotation);
-		}
-	}
-}
-
 void Player::UploadRenderData() const {
 
 	RenderData data = RenderData();
@@ -184,6 +134,17 @@ void Player::UploadRenderData() const {
 	if (_direction == PlayerFacing::LEFT) data.flip = SDL_FLIP_HORIZONTAL;
 
 	Renderer::SubmitRenderData(data);
+}
+
+void Player::ReloadWeapon() {
+	_equipedWeapon->Reload();
+}
+
+void Player::ChangeWeapon() {
+
+	_equipedWeapon->ResetAccumulator();
+	_weaponIndex = (_weaponIndex + 1) % (_weapons.size());
+	_equipedWeapon = _weapons[_weaponIndex];
 }
 
 float Player::GetX() const {
@@ -210,6 +171,6 @@ SDL_FRect Player::GetWallHitbox() const {
 	return _wallHitbox;
 }
 
-WeaponType Player::GetWeaponType() const {
-	return _equipedWeapon->GetType();
+WeaponInfo* Player::GetCurrentWeaponInfo() const {
+	return _equipedWeapon->GetWeaponInfo();
 }

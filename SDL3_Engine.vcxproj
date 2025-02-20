@@ -23,15 +23,17 @@
     <ClInclude Include="src\Core\engine.h" />
     <ClInclude Include="src\Core\input.h" />
     <ClInclude Include="src\Core\asset_manager.h" />
+    <ClInclude Include="src\Editor\editor.h" />
     <ClInclude Include="src\Game\component.h" />
     <ClInclude Include="src\Game\game.h" />
-    <ClInclude Include="src\Game\player.h" />
+    <ClInclude Include="src\Player\player.h" />
     <ClInclude Include="src\Game\projectile.h" />
     <ClInclude Include="src\Game\scene.h" />
     <ClInclude Include="src\Game\wall.h" />
     <ClInclude Include="src\Game\weapon.h" />
     <ClInclude Include="src\Renderer\renderer.h" />
     <ClInclude Include="src\Renderer\render_data.h" />
+    <ClInclude Include="src\UI\ui_backend.h" />
     <ClInclude Include="src\util.h" />
     <ClInclude Include="src\vec2.h" />
   </ItemGroup>
@@ -40,14 +42,18 @@
     <ClCompile Include="src\Core\engine.cpp" />
     <ClCompile Include="src\Core\input.cpp" />
     <ClCompile Include="src\Core\asset_manager.cpp" />
+    <ClCompile Include="src\Editor\editor.cpp" />
     <ClCompile Include="src\Game\game.cpp" />
-    <ClCompile Include="src\Game\player.cpp" />
+    <ClCompile Include="src\Player\player.cpp" />
+    <ClCompile Include="src\Player\player_input.cpp" />
+    <ClCompile Include="src\Player\player_UI.cpp" />
     <ClCompile Include="src\Game\projectile.cpp" />
     <ClCompile Include="src\Game\scene.cpp" />
     <ClCompile Include="src\Game\wall.cpp" />
     <ClCompile Include="src\Game\weapon.cpp" />
     <ClCompile Include="src\Renderer\renderer.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\UI\ui_backend.cpp" />
     <ClCompile Include="src\util.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
