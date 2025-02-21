@@ -12,11 +12,11 @@ namespace Scene {
 	void CreatePlayer();
 	Player* GetPlayer();
 	void AddProjectile(vec2 position, vec2 direction, float angle);
-	void AddWall(vec2 position, WallType type);
+	void AddWall(vec2 position, vec2 size, WallType type);
 
 	void Update(float deltaTime);
 	void UpdateCollision();
-	void UploadRenderData();
+	void UploadRenderData(SDL_FRect viewport);
 	void RemoveExpired();
 	void DisplayDebug();
 

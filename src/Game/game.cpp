@@ -4,6 +4,7 @@
 #include "../Renderer/renderer.h"
 #include "../Core/asset_manager.h"
 #include "../Core/input.h"
+#include "../Core/backend.h"
 #include "../util.h"
 #include "../Player/player.h"
 #include "../UI/ui_backend.h"
@@ -28,25 +29,37 @@ namespace Game {
 	float _accumulator = 0.f;
 	int _fps = 0;
 
+	SDL_FRect _viewport = { 0.f, 0.f, 0.f, 0.f };
+
 	bool _debugMode = false;
 	bool _editMode = false;
 
 	void Create() {
 		
+		_viewport = { 0.f, 0.f, (float)BackEnd::GetScreenWidth(), (float)BackEnd::GetScreenHeight() };
 		_isLoaded = true;
 		Scene::CreatePlayer();
-		//Scene::CreateMap();
+		Scene::CreateMap();
 	}
 
 	void Update() {
 
 		UpdateDeltaTime();
 		UpdateEvents();
+		UpdateViewport();
 
 		Scene::Update(_deltaTime);
+		Scene::UploadRenderData(_viewport);
 	
 		if (_debugMode) DisplayDebugText();
 		if (_editMode) Editor::Update();
+	}
+
+	void UpdateViewport() {
+
+		Player* player = Scene::GetPlayer();
+		_viewport.x = player->GetX() - (_viewport.w / 2.f);
+		_viewport.y = player->GetY() - (_viewport.h / 2.f);
 	}
 
 	void UpdateEvents() {
@@ -111,6 +124,10 @@ namespace Game {
 
 	bool IsEditorOpen() {
 		return _editMode;
+	}
+
+	SDL_FRect GetViewport() {
+		return _viewport;
 	}
 
 }

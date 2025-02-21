@@ -71,15 +71,15 @@ void Player::UpdateMovement(float deltaTime) {
 	if (reply.x) {
 
 		_transform.position.x += _motion.velocity.x * deltaTime;
-		_collision.hitbox.x = _transform.position.x - 32.f;
-		_wallHitbox.x = _transform.position.x - 20.f;
+		_collision.hitbox.x = _transform.position.x - 32.f;// -Game::GetViewport().x;
+		_wallHitbox.x = _transform.position.x - 20.f;// -Game::GetViewport().x;
 	}
 
 	if (reply.y) {
 
 		_transform.position.y += _motion.velocity.y * deltaTime;
-		_collision.hitbox.y = _transform.position.y - 20.f;
-		_wallHitbox.y = _transform.position.y + 90.f;
+		_collision.hitbox.y = _transform.position.y - 20.f;// -Game::GetViewport().y;
+		_wallHitbox.y = _transform.position.y + 90.f;// - Game::GetViewport().y;
 	}
 
 	if (_motion.velocity.length() == 0.f) _state = PlayerState::IDLE;

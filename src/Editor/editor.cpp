@@ -26,7 +26,7 @@ namespace Editor {
 		if (Input::IsKeyPressed(SDL_SCANCODE_W)) _tool = Tool::ERASER;
 
 		if (Input::MouseLeftPressed() && _tool == Tool::WALL) {
-			Scene::AddWall(Input::GetMousePos(), _wallType);
+			//Scene::AddWall(Input::GetMousePos(), _wallType);
 		}
 	}
 

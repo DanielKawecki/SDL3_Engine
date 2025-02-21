@@ -12,12 +12,16 @@ namespace Scene {
 	Player* _player = nullptr;
 	std::vector<Projectile> _projectiles;
 	std::vector<Wall> _walls;
-	std::vector<std::vector<int>> _map;
-	std::vector<const char*> _map2;
+	//std::vector<std::vector<int>> _map;
+	//std::vector<const char*> _map2;
 
 	void CreateMap() {
 
-		_map = {
+		AddWall(vec2(300.f, 300.f), vec2(640.f, 64.f), WallType::FRONT);
+		AddWall(vec2(300.f, 300.f), vec2(64.f, 320.f), WallType::MIDDLE_TOP);
+		AddWall(vec2(300.f, 620.f), vec2(640.f, 64.f), WallType::FRONT);
+
+		/*_map = {
 			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 			{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 			{0, 0, 0, 2, 1, 1, 1, 1, 1, 0, 0, 0},
@@ -39,7 +43,7 @@ namespace Scene {
 				else if (_map[i][j] == 6) AddWall(vec2(j * 64.f, i * 64.f), WallType::HALF_RIGHT);
 				else if (_map[i][j] == 7) AddWall(vec2(j * 64.f, i * 64.f), WallType::MIDDLE_FRONT);
 			}
-		}
+		}*/
 	}
 
 	void CreatePlayer() {
@@ -54,14 +58,14 @@ namespace Scene {
 		_projectiles.push_back(Projectile(position, direction, angle));
 	}
 
-	void AddWall(vec2 position, WallType type) {
+	void AddWall(vec2 position, vec2 size, WallType type) {
 
 		float gridSize = 32.f;
 		float posX = floor(position.x / gridSize) * gridSize;
 		float posY = floor(position.y / gridSize) * gridSize;
 		vec2 pos = vec2(posX, posY);
 
-		_walls.push_back(Wall(pos, type));
+		_walls.push_back(Wall(pos, size, type));
 	}
 
 	void Update(float deltaTime) {
@@ -70,13 +74,17 @@ namespace Scene {
 
 		_player->Update(deltaTime);
 
+		/*for (Wall& w : _walls) {
+			w.Update();
+		}*/
+
 		for (Projectile& p : _projectiles) {
 			p.Update(deltaTime);
 		}
 
 		UpdateCollision();
 
-		UploadRenderData();
+		//UploadRenderData();
 	}
 
 	void UpdateCollision() {
@@ -91,17 +99,21 @@ namespace Scene {
 		}
 	}
 
-	void UploadRenderData() {
+	void UploadRenderData(SDL_FRect viewport) {
 
 		for (const Projectile& p : _projectiles) {
 
 			RenderData data = p.CreateRenderData();
+			//data.dstRect.x -= viewport.x;
+			//data.dstRect.y -= viewport.y;
 			Renderer::SubmitRenderData(data);
 		}
 
 		for (const Wall& w : _walls) {
 
 			RenderData data = w.CreateRenderData();
+			//data.dstRect.x -= viewport.x;
+			//data.dstRect.y -= viewport.y;
 			Renderer::SubmitRenderData(data);
 		}
 	}

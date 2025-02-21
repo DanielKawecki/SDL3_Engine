@@ -25,8 +25,9 @@ private:
 	void Setup();
 
 public:
-	Wall(vec2 position, WallType type);
+	Wall(vec2 position, vec2 size, WallType type);
 	~Wall();
+	void Update();
 	RenderData CreateRenderData() const;
 	SDL_FRect GetHitbox() const;
 	bool IsActive() const;
